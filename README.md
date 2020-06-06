@@ -4,9 +4,12 @@
 
 # Use
 
-Uses PIP to install Nim via ChooseNim.
+Uses PIP to install [Nim](http://nim-lang.org) via ChooseNim.
 
 ```console
+$ nim --version
+nim: command not found
+
 $ pip install choosenim_install
     choosenim-init: Downloading choosenim-0.6.0_linux_amd64
           Info: Version 1.2.0 already selected
