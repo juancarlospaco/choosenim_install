@@ -8,6 +8,21 @@ Uses PIP to install Nim via ChooseNim.
 
 ```console
 $ pip install choosenim_install
+    choosenim-init: Downloading choosenim-0.6.0_linux_amd64
+          Info: Version 1.2.0 already selected
+    choosenim-init: ChooseNim installed in /home/juan/.nimble/bin
+    Downloading Official package list
+        Success Package list downloaded.
+
+Successfully built choosenim-install
+Successfully installed choosenim-install-0.0.1
+
+$ nim --version
+Nim Compiler Version 1.2.0 [Linux: amd64]
+Compiled at 2020-04-03
+Copyright (c) 2006-2020 by Andreas Rumpf
+active boot switches: -d:release
+
 $
 ```
 
