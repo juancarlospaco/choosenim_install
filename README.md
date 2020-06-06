@@ -29,6 +29,8 @@ active boot switches: -d:release
 $
 ```
 
+- You can re-run it several times if you want.
+
 
 # Requisites
 
