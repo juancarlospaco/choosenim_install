@@ -8,7 +8,8 @@ shutil.rmtree(str(pathlib.Path.home() / ".nimble"), ignore_errors=True)
 
 if sys.platform.startswith("win"):
   if subprocess.run(f"{ pathlib.Path(__file__).parent / 'choosenim.exe' } --yes --verbose --noColor --firstInstall stable", shell=True, check=True, timeout=9999).returncode == 0:
-    subprocess.run("nimble.exe -y --noColor refresh", shell=True, check=False, timeout=999)
+    shutil.rmtree(str(pathlib.Path.home() / r".choosenim\downloads"), ignore_errors=True)
+    subprocess.run(f"{  pathlib.Path.home() / r".nimble\bin\nimble.exe" } --yes --verbose --noColor refresh", shell=True, check=False, timeout=999)
 else:
   if subprocess.run(f"sh { pathlib.Path(__file__).parent / 'init.sh' } -y", shell=True, check=True, timeout=999).returncode == 0:
     if pathlib.Path(pathlib.Path.home() / ".nimble/bin").exists() and subprocess.run(str(pathlib.Path.home() / '.nimble/bin/nimble -y --noColor refresh'), shell=True, check=True, timeout=999).returncode == 0:
