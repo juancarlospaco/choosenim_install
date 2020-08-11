@@ -2,8 +2,11 @@ import os, pathlib, warnings, setuptools, subprocess, shutil
 
 
 os.environ["CHOOSENIM_NO_ANALYTICS"] = "1"
+shutil.rmtree(str(pathlib.Path.home() / ".choosenim"), ignore_errors=True)
+shutil.rmtree(str(pathlib.Path.home() / ".nimble"), ignore_errors=True)
+
+
 if sys.platform.startswith("win"):
-  shutil.rmtree(str(pathlib.Path.home() / ".choosenim"), ignore_errors=True)
   if subprocess.run(f"{ pathlib.Path(__file__).parent / 'choosenim.exe' } --yes --verbose --noColor --firstInstall stable", shell=True, check=True, timeout=9999).returncode == 0:
     subprocess.run("nimble.exe -y --noColor refresh", shell=True, check=False, timeout=999)
 else:
