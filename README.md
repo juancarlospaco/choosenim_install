@@ -34,7 +34,8 @@ $
 
 # Requisites
 
-- Linux OR Apple Mac OS X *(NOT Windows)*
+- Python 3
+- Linux OR Apple Mac OSX OR Windows
 
 
 # More Info
