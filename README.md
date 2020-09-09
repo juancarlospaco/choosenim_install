@@ -29,6 +29,10 @@ active boot switches: -d:release
 $
 ```
 
+
+![](https://raw.githubusercontent.com/juancarlospaco/choosenim_install/master/choosenim_install_windows.png)
+
+
 - You can re-run it several times if you want.
 
 
