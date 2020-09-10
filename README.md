@@ -37,7 +37,6 @@ $
 # Requisites
 
 - Python 3
-- Linux OR Apple Mac OSX OR Windows
 
 
 # More Info
