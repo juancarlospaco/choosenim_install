@@ -1,10 +1,8 @@
-# Choosenim integration for Python PIP
+# Nim integration for Python PIP
 
-- Install [Nim](http://nim-lang.org) directly from [Python PIP](https://pypi.org/project/nimble-install). https://pypi.org/project/nimble-install
+- Install [Nim](http://nim-lang.org) directly from [Python PIP](https://pypi.org/project/choosenim-install).
 
 # Use
-
-Uses PIP to install [Nim](http://nim-lang.org) via ChooseNim.
 
 ```console
 $ nim --version
@@ -21,7 +19,7 @@ Successfully built choosenim-install
 Successfully installed choosenim-install-0.0.1
 
 $ nim --version
-Nim Compiler Version 1.2.0 [Linux: amd64]
+Nim Compiler Version 1.2.6 [Linux: amd64]
 Compiled at 2020-04-03
 Copyright (c) 2006-2020 by Andreas Rumpf
 active boot switches: -d:release
