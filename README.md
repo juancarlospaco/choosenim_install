@@ -33,6 +33,10 @@ $
 
 - You can re-run it several times if you want.
 
+![](https://raw.githubusercontent.com/juancarlospaco/choosenim_install/master/choosenim2.png)
+
+- Update an old version of Nim to the latest just by reinstalling the package using PIP.
+
 
 # Requisites
 
