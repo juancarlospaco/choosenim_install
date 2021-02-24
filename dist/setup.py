@@ -10,7 +10,7 @@ shutil.rmtree(str(pathlib.Path.home() / ".choosenim"), ignore_errors=True)
 class X(install):
   def run(self):
     install.run(self)
-    # TODO: choosenim has a new "--noSSLCheck" that can be added in the future.
+    # TODO: nimble has a new "--noSSLCheck" that can be added in the future.
     if sys.platform.startswith("win"):
       if subprocess.run(f"{ pathlib.Path(__file__).parent / 'choosenim.exe' } --yes --verbose --noColor --firstInstall stable", shell=True, check=True, timeout=9999).returncode == 0:
         shutil.rmtree(str(pathlib.Path.home() / ".choosenim" / "downloads"), ignore_errors=True)
