@@ -1,6 +1,8 @@
 # Nim integration for Python PIP
 
-- Install [Nim](http://nim-lang.org) directly from [Python PIP](https://pypi.org/project/choosenim-install).
+- AutoInstall [Nim](http://nim-lang.org) directly from [Python PIP](https://pypi.org/project/choosenim-install).
+- AutoInstall Nimpy and Fusion.
+
 
 # Use
 
