@@ -16,9 +16,9 @@ class X(install):
     result = False
     ext = ".exe" if sys.platform.startswith("win") else ""
     nimble_exe = 'nimble' + ext  # Try "nimble"
-    if subprocess.run(f"{ nimble_exe } --version", shell=True, check=True, timeout=99).returncode != 0:
+    if subprocess.run(f"{ nimble_exe } --version", shell=True, timeout=99).returncode != 0:
       nimble_exe = pathlib.Path.home() / '.nimble' / 'bin' / 'nimble' + ext  # Try full path to "nimble"
-      if subprocess.run(f"{ nimble_exe } --version", shell=True, check=True, timeout=99).returncode != 0:
+      if subprocess.run(f"{ nimble_exe } --version", shell=True, timeout=99).returncode != 0:
         warnings.warn(f"Nimble not found, tried '{ nimble_exe }' and 'nimble'")
     # nim_exe = 'nimble' + ext  # Try "nim"
     # if subprocess.run(f"{ nim_exe } --version", shell=True, check=True, timeout=99).returncode != 0:
@@ -27,9 +27,9 @@ class X(install):
     #     warnings.warn(f"Nimble not found, tried '{ nim_exe }' and 'nim'")
     if os.exists(nimble_exe): # and os.exists(nim_exe):
       nimble_cmd = f"{ nimble_exe } --yes --verbose --noColor "   # --nim:'{nim_exe}'
-      if subprocess.run(f"{ nimble_cmd } refresh", shell=True, check=True, timeout=999).returncode == 0:
-        if subprocess.run(f"{ nimble_cmd } install nimpy", shell=True, check=True, timeout=999).returncode == 0:
-          if subprocess.run(f"{ nimble_cmd } install fusion", shell=True, check=True, timeout=999).returncode == 0:
+      if subprocess.run(f"{ nimble_cmd } refresh", shell=True, timeout=999).returncode == 0:
+        if subprocess.run(f"{ nimble_cmd } install nimpy", shell=True, timeout=999).returncode == 0:
+          if subprocess.run(f"{ nimble_cmd } install fusion", shell=True, timeout=999).returncode == 0:
             result = True
           else:
             warnings.warn(f"Failed to run '{ nimble_cmd } install fusion'")
@@ -47,11 +47,11 @@ class X(install):
     # if it is not installed run "init.sh" or "choosenim --firstInstall" to install choosenim.
     result = False
     choosenim_exe = "choosenim.exe" if sys.platform.startswith("win") else "choosenim"
-    if subprocess.run(f"{ choosenim_exe } --version", shell=True, check=True, timeout=99).returncode == 0:
+    if subprocess.run(f"{ choosenim_exe } --version", shell=True, timeout=999).returncode == 0:
       warnings.warn(f"Choosenim is already installed and working on the system '{ choosenim_exe }'")
-      if subprocess.run(f"{ choosenim_exe } update self", shell=True, check=True, timeout=999).returncode != 0:
+      if subprocess.run(f"{ choosenim_exe } update self", shell=True, timeout=999).returncode != 0:
         warnings.warn(f"Failed to run '{ choosenim_exe } update self'")  # Dont worry if "update self" fails.
-      if subprocess.run(f"{ choosenim_exe } update stable", shell=True, check=True, timeout=999).returncode == 0:
+      if subprocess.run(f"{ choosenim_exe } update stable", shell=True, timeout=999).returncode == 0:
         result = True
       else:
         warnings.warn(f"Failed to run '{ choosenim_exe } update stable'")
@@ -59,7 +59,7 @@ class X(install):
       choosenim_exe = pathlib.Path(__file__).parent / "choosenim.exe" if sys.platform.startswith("win") else "init.sh"
       if os.exists(choosenim_exe):
         choosenim_cmd = f"{ choosenim_exe } { ' --yes --verbose --noColor --firstInstall stable' if sys.platform.startswith('win') else ' -y' }"
-        if subprocess.run(choosenim_cmd, shell=True, check=True, timeout=999).returncode == 0:
+        if subprocess.run(choosenim_cmd, shell=True, timeout=999).returncode == 0:
           result = True
         else:
           warnings.warn(f"Failed to run '{ choosenim_cmd }'")
