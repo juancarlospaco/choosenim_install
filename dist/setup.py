@@ -20,8 +20,13 @@ class X(install):
       nimble_exe = pathlib.Path.home() / '.nimble' / 'bin' / f"nimble{ext}"  # Try full path to "nimble"
       if subprocess.run(f"{ nimble_exe } --version", shell=True, timeout=99).returncode != 0:
         warnings.warn(f"Nimble not found, tried '{ nimble_exe }' and 'nimble'")
+    nim_exe = 'nim' + ext  # Try "nim"
+    if subprocess.run(f"{ nim_exe } --version", shell=True, timeout=99).returncode != 0:
+      nim_exe = pathlib.Path.home() / '.nimble' / 'bin' / f"nim{ext}"  # Try full path to "nim"
+      if subprocess.run(f"{ nim_exe } --version", shell=True, timeout=99).returncode != 0:
+        warnings.warn(f"Nim not found, tried '{ nim_exe }' and 'nim'")
     if os.path.exists(nimble_exe):
-      nimble_cmd = f"{ nimble_exe } -y --verbose --noColor "
+      nimble_cmd = f"{ nimble_exe } -y --verbose --noColor --nim:'{ nim_exe }'"
       if subprocess.run(f"{ nimble_cmd } refresh", shell=True, timeout=999).returncode == 0:
         print(f"OK\t{ nimble_cmd } refresh")
         if subprocess.run(f"{ nimble_cmd } install nimpy", shell=True, timeout=999).returncode == 0:
