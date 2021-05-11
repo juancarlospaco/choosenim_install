@@ -4,8 +4,6 @@ from setuptools.command.install import install
 
 assert sys.version_info > (3, 5, 0), "ERROR: Python version must be > 3.5!." # F-String.
 os.environ["CHOOSENIM_NO_ANALYTICS"] = "1"
-# shutil.rmtree(str(pathlib.Path.home() / ".choosenim"), ignore_errors=True)
-# shutil.rmtree(str(pathlib.Path.home() / ".nimble"), ignore_errors=True)
 
 
 class X(install):
