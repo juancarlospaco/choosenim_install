@@ -21,7 +21,7 @@ class X(install):
       if subprocess.run(f"{ nimble_exe } --version", shell=True, timeout=99).returncode != 0:
         warnings.warn(f"Nimble not found, tried '{ nimble_exe }' and 'nimble'")
     if os.path.exists(nimble_exe):
-      nimble_cmd = f"{ nimble_exe } --yes --verbose --noColor "
+      nimble_cmd = f"{ nimble_exe } -y --verbose --noColor "
       if subprocess.run(f"{ nimble_cmd } refresh", shell=True, timeout=999).returncode == 0:
         print(f"OK\t{ nimble_cmd } refresh")
         if subprocess.run(f"{ nimble_cmd } install nimpy", shell=True, timeout=999).returncode == 0:
