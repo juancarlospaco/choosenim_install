@@ -20,7 +20,7 @@ class X(install):
       nimble_exe = pathlib.Path.home() / '.nimble' / 'bin' / f"nimble{ext}"  # Try full path to "nimble"
       if subprocess.run(f"{ nimble_exe } --version", shell=True, timeout=99).returncode != 0:
         warnings.warn(f"Nimble not found, tried '{ nimble_exe }' and 'nimble'")
-    nim_exe = pathlib.Path(shutil.which(f"nim{ext}"))  # Ask shutil for "nim"
+    nim_exe = shutil.which(f"nim{ext}")  # Ask shutil for "nim"
     if subprocess.run(f"{ nim_exe } --version", shell=True, timeout=99).returncode != 0:
       nim_exe = pathlib.Path.home() / '.nimble' / 'bin' / f"nim{ext}"  # Try full path to "nim"
       if subprocess.run(f"{ nim_exe } --version", shell=True, timeout=99).returncode != 0:
