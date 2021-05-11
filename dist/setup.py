@@ -157,9 +157,9 @@ class X(install):
       raise Exception(IOError, "Failed to install choosenim")
 
 setuptools.setup(
-  name = "choosenim_install",
-  author = "Juan_Carlos.nim",
+  name         = "choosenim_install",
+  author       = "Juan_Carlos.nim",
+  cmdclass     = {"install": X},
   author_email = "UNKNOWN",
-  url = "UNKNOWN",
-  cmdclass = {"install": X}
+  url          = "UNKNOWN",
 )
