@@ -18,6 +18,6 @@ jobs:
 
     - name: Test
       run: |
-        pip install choosenim_install
+        pip install .
         nim --version
         nimble --version
