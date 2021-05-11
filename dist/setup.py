@@ -12,7 +12,11 @@ class X(install):
   def nimble_setup(self):
     result = False
     ext = ".exe" if sys.platform.startswith("win") else ""
-    nimble_exe = pathlib.Path.home() / '.nimble' / 'bin' / 'nimble' + ext
+    nimble_exe = 'nimble' + ext  # Try "nimble"
+    if subprocess.run(f"{ nimble_exe } --version", shell=True, check=True, timeout=99).returncode != 0:
+      nimble_exe = pathlib.Path.home() / '.nimble' / 'bin' / 'nimble' + ext  # Try full path to "nimble"
+      if subprocess.run(f"{ nimble_exe } --version", shell=True, check=True, timeout=99).returncode != 0:
+        warnings.warn(f"Nimble not found, tried '{ nimble_exe }' and 'nimble'")
     if os.exists(nimble_exe):
       nimble_cmd = f"{ nimble_exe } --yes --verbose --noColor "
       if subprocess.run(f"{ nimble_cmd } refresh", shell=True, check=True, timeout=999).returncode == 0:
@@ -31,13 +35,15 @@ class X(install):
 
   def choosenim_setup(self):
     result = False
-    choosenim_cmd = pathlib.Path(__file__).parent / "choosenim.exe --version" if sys.platform.startswith("win") else "choosenim --version"
-    if subprocess.run(choosenim_cmd, shell=True, check=True, timeout=99).returncode == 0:
-      warnings.warn(f"Choosenim is already installed and working on the system '{ choosenim_cmd }'")
-      choosenim_cmd = pathlib.Path(__file__).parent / "choosenim.exe update self" if sys.platform.startswith("win") else "choosenim update self"
-      if subprocess.run(choosenim_exe, shell=True, check=True, timeout=99).returncode != 0:
-        warnings.warn(f"Failed to run '{ choosenim_cmd }'")  # Dont worry if "update self" fails.
-      result = True
+    choosenim_exe = "choosenim.exe" if sys.platform.startswith("win") else "choosenim"
+    if subprocess.run(f"{ choosenim_exe } --version", shell=True, check=True, timeout=99).returncode == 0:
+      warnings.warn(f"Choosenim is already installed and working on the system '{ choosenim_exe }'")
+      if subprocess.run(f"{ choosenim_exe } update self", shell=True, check=True, timeout=999).returncode != 0:
+        warnings.warn(f"Failed to run '{ choosenim_exe } update self'")  # Dont worry if "update self" fails.
+      if subprocess.run(f"{ choosenim_exe } update stable", shell=True, check=True, timeout=999).returncode == 0:
+        result = True
+      else:
+        warnings.warn(f"Failed to run '{ choosenim_exe } update stable'")
     else:
       choosenim_exe = pathlib.Path(__file__).parent / "choosenim.exe" if sys.platform.startswith("win") else "init.sh"
       if os.exists(choosenim_exe):
