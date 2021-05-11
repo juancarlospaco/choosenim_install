@@ -19,8 +19,13 @@ class X(install):
       nimble_exe = pathlib.Path.home() / '.nimble' / 'bin' / 'nimble' + ext  # Try full path to "nimble"
       if subprocess.run(f"{ nimble_exe } --version", shell=True, check=True, timeout=99).returncode != 0:
         warnings.warn(f"Nimble not found, tried '{ nimble_exe }' and 'nimble'")
-    if os.exists(nimble_exe):
-      nimble_cmd = f"{ nimble_exe } --yes --verbose --noColor "
+    nim_exe = 'nimble' + ext  # Try "nim"
+    if subprocess.run(f"{ nim_exe } --version", shell=True, check=True, timeout=99).returncode != 0:
+      nim_exe = pathlib.Path.home() / '.nimble' / 'bin' / 'nim' + ext  # Try full path to "nim"
+      if subprocess.run(f"{ nim_exe } --version", shell=True, check=True, timeout=99).returncode != 0:
+        warnings.warn(f"Nimble not found, tried '{ nim_exe }' and 'nim'")
+    if os.exists(nimble_exe) and os.exists(nim_exe):
+      nimble_cmd = f"{ nimble_exe } --yes --verbose --noColor --nim:'{nim_exe}' "
       if subprocess.run(f"{ nimble_cmd } refresh", shell=True, check=True, timeout=999).returncode == 0:
         if subprocess.run(f"{ nimble_cmd } install nimpy", shell=True, check=True, timeout=999).returncode == 0:
           if subprocess.run(f"{ nimble_cmd } install fusion", shell=True, check=True, timeout=999).returncode == 0:
@@ -131,8 +136,8 @@ class X(install):
     install.run(self)
     # TODO: nimble has a new "--noSSLCheck" that can be added in the future.
     if self.choosenim_setup():
-      self.add_to_path()  # Need to add to PATH to run Nimble.
-      self.nimble_setup()
+      if self.nimble_setup():
+        self.add_to_path()
 
 
 setuptools.setup(cmdclass = {"install": X})
