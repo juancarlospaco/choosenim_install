@@ -17,7 +17,7 @@ class X(install):
     ext = ".exe" if sys.platform.startswith("win") else ""
     nimble_exe = 'nimble' + ext  # Try "nimble"
     if subprocess.run(f"{ nimble_exe } --version", shell=True, timeout=99).returncode != 0:
-      nimble_exe = pathlib.Path.home() / '.nimble' / 'bin' / 'nimble' + ext  # Try full path to "nimble"
+      nimble_exe = pathlib.Path.home() / '.nimble' / 'bin' / f"nimble{ext}"  # Try full path to "nimble"
       if subprocess.run(f"{ nimble_exe } --version", shell=True, timeout=99).returncode != 0:
         warnings.warn(f"Nimble not found, tried '{ nimble_exe }' and 'nimble'")
     if os.path.exists(nimble_exe):
