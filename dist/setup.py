@@ -60,7 +60,7 @@ class X(install):
         if subprocess.run(choosenim_cmd, shell=True, timeout=999).returncode == 0:
           print(f"OK\t{ choosenim_cmd }")
           if sys.platform.startswith('win'):
-            if subprocess.run(f"{ choosenim_exe } { ' stable --firstInstall', shell=True, timeout=999).returncode == 0:
+            if subprocess.run(f"{ choosenim_exe } stable --firstInstall", shell=True, timeout=999).returncode == 0:
               result = True
           else:
             result = True
