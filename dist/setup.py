@@ -23,8 +23,11 @@ class X(install):
     if os.path.exists(nimble_exe):
       nimble_cmd = f"{ nimble_exe } --yes --verbose --noColor "
       if subprocess.run(f"{ nimble_cmd } refresh", shell=True, timeout=999).returncode == 0:
+        print(f"OK\t{ nimble_cmd } refresh")
         if subprocess.run(f"{ nimble_cmd } install nimpy", shell=True, timeout=999).returncode == 0:
+          print(f"OK\t{ nimble_cmd } install nimpy")
           if subprocess.run(f"{ nimble_cmd } install fusion", shell=True, timeout=999).returncode == 0:
+            print(f"OK\t{ nimble_cmd } install fusion")
             result = True
           else:
             warnings.warn(f"Failed to run '{ nimble_cmd } install fusion'")
@@ -56,6 +59,7 @@ class X(install):
         choosenim_cmd = f"{ choosenim_exe } { ' --yes --verbose --noColor --firstInstall stable' if sys.platform.startswith('win') else ' -y' }"
         if subprocess.run(choosenim_cmd, shell=True, timeout=999).returncode == 0:
           result = True
+          print(f"OK\t{ choosenim_cmd }")
         else:
           warnings.warn(f"Failed to run '{ choosenim_cmd }'")
       else:
@@ -80,6 +84,7 @@ class X(install):
         else:
           with open(filename, "w") as f:
             f.write(new_path)
+        print(f"OK\t{ filename }")
       except:
         warnings.warn(f"Failed to write file: {filename}")
       filename = pathlib.Path.home() / ".profile"
@@ -95,6 +100,7 @@ class X(install):
         else:
           with open(filename, "w") as f:
             f.write(new_path)
+        print(f"OK\t{ filename }")
       except:
         warnings.warn("Failed to write file ~/.profile")
       filename = pathlib.Path.home() / ".bash_profile"
@@ -110,6 +116,7 @@ class X(install):
         else:
           with open(filename, "w") as f:
             f.write(new_path)
+        print(f"OK\t{ filename }")
       except:
         warnings.warn("Failed to write file ~/.bash_profile")
       filename = pathlib.Path.home() / ".zshrc"
@@ -125,6 +132,7 @@ class X(install):
         else:
           with open(filename, "w") as f:
             f.write(new_path)
+        print(f"OK\t{ filename }")
       except:
         warnings.warn("Failed to write file ~/.zshrc")
 
