@@ -31,16 +31,24 @@ class X(install):
 
   def choosenim_setup(self):
     result = False
-    choosenim_exe = pathlib.Path(__file__).parent / "choosenim.exe" if sys.platform.startswith("win") else "init.sh"
-    if os.exists(choosenim_exe):
-      choosenim_cmd = f"{ choosenim_exe } { ' --yes --verbose --noColor --firstInstall stable' if sys.platform.startswith('win') else ' -y' }"
-      if subprocess.run(choosenim_cmd, shell=True, check=True, timeout=999).returncode == 0:
-        result = True
-      else:
-        warnings.warn(f"Failed to run '{ choosenim_cmd }'")
+    choosenim_cmd = pathlib.Path(__file__).parent / "choosenim.exe --version" if sys.platform.startswith("win") else "choosenim --version"
+    if subprocess.run(choosenim_cmd, shell=True, check=True, timeout=99).returncode == 0:
+      warnings.warn(f"Choosenim is already installed and working on the system '{ choosenim_cmd }'")
+      choosenim_cmd = pathlib.Path(__file__).parent / "choosenim.exe update self" if sys.platform.startswith("win") else "choosenim update self"
+      if subprocess.run(choosenim_exe, shell=True, check=True, timeout=99).returncode != 0:
+        warnings.warn(f"Failed to run '{ choosenim_cmd }'")  # Dont worry if "update self" fails.
+      result = True
     else:
-      warnings.warn(f"File not found '{ choosenim_exe }'")
-    shutil.rmtree(str(pathlib.Path.home() / ".choosenim" / "downloads"), ignore_errors=True)
+      choosenim_exe = pathlib.Path(__file__).parent / "choosenim.exe" if sys.platform.startswith("win") else "init.sh"
+      if os.exists(choosenim_exe):
+        choosenim_cmd = f"{ choosenim_exe } { ' --yes --verbose --noColor --firstInstall stable' if sys.platform.startswith('win') else ' -y' }"
+        if subprocess.run(choosenim_cmd, shell=True, check=True, timeout=999).returncode == 0:
+          result = True
+        else:
+          warnings.warn(f"Failed to run '{ choosenim_cmd }'")
+      else:
+        warnings.warn(f"File not found '{ choosenim_exe }'")
+      shutil.rmtree(str(pathlib.Path.home() / ".choosenim" / "downloads"), ignore_errors=True)  # Clear download cache.
     return result
 
   def add_to_path(self):
