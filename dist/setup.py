@@ -25,7 +25,7 @@ class X(install):
     #   nim_exe = pathlib.Path.home() / '.nimble' / 'bin' / 'nim' + ext  # Try full path to "nim"
     #   if subprocess.run(f"{ nim_exe } --version", shell=True, check=True, timeout=99).returncode != 0:
     #     warnings.warn(f"Nimble not found, tried '{ nim_exe }' and 'nim'")
-    if os.exists(nimble_exe): # and os.exists(nim_exe):
+    if os.path.exists(nimble_exe): # and os.exists(nim_exe):
       nimble_cmd = f"{ nimble_exe } --yes --verbose --noColor "   # --nim:'{nim_exe}'
       if subprocess.run(f"{ nimble_cmd } refresh", shell=True, timeout=999).returncode == 0:
         if subprocess.run(f"{ nimble_cmd } install nimpy", shell=True, timeout=999).returncode == 0:
@@ -57,7 +57,7 @@ class X(install):
         warnings.warn(f"Failed to run '{ choosenim_exe } update stable'")
     else:
       choosenim_exe = pathlib.Path(__file__).parent / "choosenim.exe" if sys.platform.startswith("win") else "init.sh"
-      if os.exists(choosenim_exe):
+      if os.path.exists(choosenim_exe):
         choosenim_cmd = f"{ choosenim_exe } { ' --yes --verbose --noColor --firstInstall stable' if sys.platform.startswith('win') else ' -y' }"
         if subprocess.run(choosenim_cmd, shell=True, timeout=999).returncode == 0:
           result = True
