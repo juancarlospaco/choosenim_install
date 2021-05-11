@@ -1,10 +1,12 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.1
 Name: choosenim_install
 Version: 0.5.0
 Summary: Choosenim integration for Python
 Author: Juan Carlos
+Author-email: UNKNOWN
 Maintainer: Juan Carlos
 License: MIT
+Url: UNKNOWN
 Project-URL: Homepage, https://nim-lang.org
 Project-URL: For Python Devs, https://github.com/nim-lang/Nim/wiki/Nim-for-Python-Programmers
 Project-URL: For TypeScript Devs, https://github.com/nim-lang/Nim/wiki/Nim-for-TypeScript-Programmers
@@ -21,6 +23,7 @@ Project-URL: Tutorial, https://nim-lang.github.io/Nim/tut1.html
 Keywords: python3, python4, cpython, speed, cython, c, performance, compiled, native, fast, nim
 Platform: Linux
 Platform: Darwin
+Platform: Windows
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Environment :: Console
 Classifier: Environment :: Other Environment
