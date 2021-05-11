@@ -10,6 +10,8 @@ os.environ["CHOOSENIM_NO_ANALYTICS"] = "1"
 class X(install):
 
   def nimble_setup(self):
+    # After choosenim, we check that Nimble is working,
+    # as "nimble" or "~/.nimble/bin/nimble", then install nimpy and fusion
     result = False
     ext = ".exe" if sys.platform.startswith("win") else ""
     nimble_exe = 'nimble' + ext  # Try "nimble"
@@ -34,6 +36,9 @@ class X(install):
     return result
 
   def choosenim_setup(self):
+    # Check for choosenim using "choosenim --version", to see if it is already installed,
+    # if it is installed, run "choosenim update self" and "choosenim update stable",
+    # if it is not installed run "init.sh" or "choosenim --firstInstall" to install choosenim.
     result = False
     choosenim_exe = "choosenim.exe" if sys.platform.startswith("win") else "choosenim"
     if subprocess.run(f"{ choosenim_exe } --version", shell=True, check=True, timeout=99).returncode == 0:
@@ -58,6 +63,7 @@ class X(install):
     return result
 
   def add_to_path(self):
+    # On Linux add Nim to the PATH.
     if not sys.platform.startswith("win"):
       new_path = f"export PATH={ pathlib.Path.home() / '.nimble/bin' }:$PATH"
       filename = pathlib.Path.home() / ".bashrc"
