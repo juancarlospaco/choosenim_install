@@ -1,4 +1,5 @@
 import os, sys, pathlib, warnings, setuptools, subprocess, shutil
+from setuptools.command.install import install
 
 
 assert sys.version_info > (3, 5, 0), "ERROR: Python version must be > 3.5!." # F-String.
