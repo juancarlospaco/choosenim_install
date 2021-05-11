@@ -146,6 +146,9 @@ class X(install):
     if self.choosenim_setup():
       if self.nimble_setup():
         self.add_to_path()
-
+      else:
+        warnings.warn("Failed to setup Nimble")
+    else:
+      raise Exception(IOError, "Failed to install choosenim")
 
 setuptools.setup(cmdclass = {"install": X})
