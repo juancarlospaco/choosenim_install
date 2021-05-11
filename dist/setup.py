@@ -56,7 +56,7 @@ class X(install):
     else:
       choosenim_exe = pathlib.Path(__file__).parent / "choosenim.exe" if sys.platform.startswith("win") else "init.sh"
       if os.path.exists(choosenim_exe):
-        choosenim_cmd = f"{ choosenim_exe } { ' --yes --verbose --noColor --firstInstall stable' if sys.platform.startswith('win') else ' -y' }"
+        choosenim_cmd = f"{ '' if sys.platform.startswith('win') else 'sh '}{ choosenim_exe } { ' --yes --verbose --noColor --firstInstall stable' if sys.platform.startswith('win') else ' -y' }"
         if subprocess.run(choosenim_cmd, shell=True, timeout=999).returncode == 0:
           print(f"OK\t{ choosenim_cmd }")
           if sys.platform.startswith('win'):
