@@ -131,7 +131,8 @@ class X(install):
     install.run(self)
     # TODO: nimble has a new "--noSSLCheck" that can be added in the future.
     if self.choosenim_setup():
-      if self.nimble_setup():
-        self.add_to_path()
+      self.add_to_path()  # Need to add to PATH to run Nimble.
+      self.nimble_setup()
+
 
 setuptools.setup(cmdclass = {"install": X})
