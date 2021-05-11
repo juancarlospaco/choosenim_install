@@ -17,7 +17,8 @@ jobs:
         python-version: '3.9'
 
     - name: Test
+      shell: bash
       run: |
-        pip install dist/
-        nim --version
-        nimble --version
+        pip install --use-feature=in-tree-build dist/
+        ~/.nimble/bin/nim --version
+        ~/.nimble/bin/nimble --version
