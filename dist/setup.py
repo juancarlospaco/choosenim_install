@@ -26,9 +26,9 @@ class X(install):
       if subprocess.run(f"{ nim_exe } --version", shell=True, timeout=99).returncode != 0:
         warnings.warn(f"Nim not found, tried '{ nim_exe }' and 'nim'")
     if os.path.exists(nimble_exe):
-      nimble_cmd = f"{ nimble_exe } -y --verbose --noColor --nim:'{ nim_exe }'"
+      nimble_cmd = f"{ nimble_exe } -y --noColor --nim:'{ nim_exe }'"
       if subprocess.run(f"{ nimble_cmd } refresh", shell=True, timeout=999).returncode == 0:
-        print(f"OK\t{ nimble_cmd } refresh")
+        print(f"OK\t{ nimble_cmd } --verbose refresh")
         if subprocess.run(f"{ nimble_cmd } install nimpy", shell=True, timeout=999).returncode == 0:
           print(f"OK\t{ nimble_cmd } install nimpy")
           if subprocess.run(f"{ nimble_cmd } install fusion", shell=True, timeout=999).returncode == 0:
