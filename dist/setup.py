@@ -156,4 +156,10 @@ class X(install):
     else:
       raise Exception(IOError, "Failed to install choosenim")
 
-setuptools.setup(cmdclass = {"install": X})
+setuptools.setup(
+  name = "choosenim_install",
+  author = "Juan_Carlos.nim",
+  author_email = "UNKNOWN",
+  url = "UNKNOWN",
+  cmdclass = {"install": X}
+)
