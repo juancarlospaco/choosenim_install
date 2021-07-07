@@ -48,8 +48,9 @@ class X(install):
       if subprocess.call(nimble_exe + " --version", shell=True, timeout=99) != 0:
         warnings.warn("Nimble not found, tried 'nimble' and " + nimble_exe)
     nim_exe = which("nim" + ext)  # Ask which for "nim"
-    if nim_exe is not None:
-      nim_exe = str(nim_exe)
+    if nim_exe is None:
+      warnings.warn("shutil.which can not find 'nim' executable")
+      nim_exe = "nim"
     if subprocess.call(nim_exe + " --version", shell=True, timeout=99) != 0:
       nim_exe = os.path.join(home, '.nimble', 'bin', "nim" + ext)  # Try full path to "nim"
       if subprocess.call(nim_exe + " --version", shell=True, timeout=99) != 0:
