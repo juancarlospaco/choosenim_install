@@ -42,7 +42,7 @@ $
 
 # Requisites
 
-- Python >`3.5`.
+- Python >= `3.0`.
 
 
 # More Info
