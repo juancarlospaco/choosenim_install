@@ -1,7 +1,7 @@
 Metadata-Version: 2.1
 Name: choosenim_install
-Version: 0.5.0
-Summary: Choosenim integration for Python
+Version: 0.5.5
+Summary: Nim integration for Python
 Author: Juan Carlos
 Author-email: UNKNOWN
 Maintainer: Juan Carlos
@@ -20,7 +20,7 @@ Project-URL: Matrix, https://matrix.to/#/#freenode_#nim:matrix.org
 Project-URL: Argentina Chat Spanish, https://t.me/NimArgentina
 Project-URL: Dev Documentation Index, https://nim-lang.github.io/Nim/theindex.html
 Project-URL: Tutorial, https://nim-lang.github.io/Nim/tut1.html
-Keywords: python3, python4, cpython, speed, cython, c, performance, compiled, native, fast, nim
+Keywords: python2, python3, python4, cpython, speed, cython, c, performance, compiled, native, fast, nim
 Platform: Linux
 Platform: Darwin
 Platform: Windows
@@ -34,12 +34,16 @@ Classifier: Operating System :: POSIX :: Linux
 Classifier: Operating System :: MacOS :: MacOS X
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.1
+Classifier: Programming Language :: Python :: 3.2
+Classifier: Programming Language :: Python :: 3.3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
 Classifier: Programming Language :: Python :: 3.6
 Classifier: Programming Language :: Python :: 3.7
 Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: Implementation :: CPython
 Classifier: Topic :: Software Development
-Requires-Python: >=3.6
+Requires-Python: >=3.0
 Description-Content-Type: text/markdown
