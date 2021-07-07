@@ -144,6 +144,23 @@ class X(install):
         print(f"OK\t{ filename }")
       except:
         warnings.warn("Failed to write file ~/.zshrc")
+      # https://github.com/juancarlospaco/choosenim_install/issues/4
+      filename = pathlib.Path.home() / ".zshenv"
+      try:
+        if filename.exists():
+          found = False
+          with open(filename, "a") as f:
+            for line in f:
+              if new_path == line:
+                found = True
+            if not found:
+              f.write(new_path)
+        else:
+          with open(filename, "w") as f:
+            f.write(new_path)
+        print(f"OK\t{ filename }")
+      except:
+        warnings.warn("Failed to write file ~/.zshenv")
 
   def run(self):
     install.run(self)
