@@ -32,7 +32,8 @@ def which(cmd, mode = os.F_OK | os.X_OK, path = None):
         name = os.path.join(dir, thefile)
         if _access_check(name, mode):
           return name
-  return None
+  warnings.warn("shutil.which can not find executable " + cmd)
+  return cmd
 
 
 class X(install):
@@ -42,19 +43,20 @@ class X(install):
     # as "nimble" or "~/.nimble/bin/nimble", then install nimpy and fusion
     result = False
     ext = ".exe" if sys.platform.startswith("win") else ""
-    nimble_exe = 'nimble' + ext  # Try "nimble"
+    nimble_exe = which("nimble" + ext)  # Try "nimble"
     if subprocess.call(nimble_exe + " --version", shell=True, timeout=99) != 0:
       nimble_exe = os.path.join(home, '.nimble', 'bin', "nimble" + ext)  # Try full path to "nimble"
       if subprocess.call(nimble_exe + " --version", shell=True, timeout=99) != 0:
-        warnings.warn("Nimble not found, tried 'nimble' and " + nimble_exe)
+        nimble_exe = "nimble"
+        if subprocess.call(nimble_exe + " --version", shell=True, timeout=99) != 0:
+          warnings.warn("Nim not found, tried 'nimble' and " + nimble_exe)
     nim_exe = which("nim" + ext)  # Ask which for "nim"
-    if nim_exe is None:
-      warnings.warn("shutil.which can not find 'nim' executable")
-      nim_exe = "nim"
     if subprocess.call(nim_exe + " --version", shell=True, timeout=99) != 0:
       nim_exe = os.path.join(home, '.nimble', 'bin', "nim" + ext)  # Try full path to "nim"
       if subprocess.call(nim_exe + " --version", shell=True, timeout=99) != 0:
-        warnings.warn("Nim not found, tried 'nim' and " + nim_exe)
+        nim_exe = "nim"
+        if subprocess.call(nim_exe + " --version", shell=True, timeout=99) != 0:
+          warnings.warn("Nim not found, tried 'nim' and " + nim_exe)
     if os.path.exists(nimble_exe):
       nimble_cmd = nimble_exe + " -y --noColor --nim:'" + nim_exe + "'"
       if subprocess.call(nimble_cmd + " refresh", shell=True, timeout=999) == 0:
