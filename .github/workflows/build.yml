@@ -16,6 +16,7 @@ jobs:
       with:
         python-version: '3.5'
 
+    # --use-feature=in-tree-build
     - name: Test
       run: |
-        pip --no-color --no-python-version-warning --disable-pip-version-check --no-cache-dir --no-input --verbose install --use-feature=in-tree-build dist/
+        pip --no-color --no-python-version-warning --disable-pip-version-check --no-cache-dir --no-input --verbose install dist/
