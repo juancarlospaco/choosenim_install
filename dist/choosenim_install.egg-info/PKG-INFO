@@ -20,7 +20,7 @@ Project-URL: Matrix, https://matrix.to/#/#freenode_#nim:matrix.org
 Project-URL: Argentina Chat Spanish, https://t.me/NimArgentina
 Project-URL: Dev Documentation Index, https://nim-lang.github.io/Nim/theindex.html
 Project-URL: Tutorial, https://nim-lang.github.io/Nim/tut1.html
-Keywords: python2, python3, python4, cpython, speed, cython, c, performance, compiled, native, fast, nim
+Keywords: python2, python3, python4, cpython, speed, cython, c, performance, compiled, native, fast, nim, rust
 Platform: Linux
 Platform: Darwin
 Platform: Windows
