@@ -113,6 +113,7 @@ class X(install):
 
   def add_to_path(self):
     # On Linux add Nim to the PATH.
+    # Android does not have .bashrc equivalent.
     if not sys.platform.startswith("win"):
       new_path = "export PATH=" + os.path.join(home, '.nimble/bin') + ":$PATH"
       filename = os.path.join(home, ".bashrc")
