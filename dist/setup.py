@@ -1,7 +1,8 @@
-import os, sys, warnings, setuptools, subprocess, shutil
+import os, sys, warnings, setuptools, subprocess, shutil, platform
 from setuptools.command.install import install
 
 
+assert platform.python_implementation() == "CPython", "ERROR: Python implementation must be CPython!."
 assert sys.version_info > (3, 0, 0), "ERROR: Python version must be > 3.0!."
 os.environ["CHOOSENIM_NO_ANALYTICS"] = "1"
 home = os.path.expanduser("~")
