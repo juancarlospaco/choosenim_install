@@ -1,7 +1,7 @@
 # Nim integration for Python PIP
 
 - AutoInstall [Nim](http://nim-lang.org) directly from [Python PIP](https://pypi.org/project/choosenim-install).
-- AutoInstall of `nim`, `nimble`, `choosenim`, `nimpy` and `fusion`.
+- AutoInstall of `nim`, `nimble`, `nimpy`, `fusion`, `nodejs`, `cpython`.
 
 
 # Use
@@ -43,6 +43,12 @@ $
 # Requisites
 
 - Python >`3.0`, CPython implementation.
+
+
+# History
+
+Originally this used multiple bundled `choosenim` to install Nim,
+now it re-implements `choosenim` functionalities in pure Python 3.0+.
 
 
 # More Info
