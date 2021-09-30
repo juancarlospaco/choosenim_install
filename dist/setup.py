@@ -74,9 +74,9 @@ def get_link(latest_stable_semver):
   assert len(latest_stable_semver) > 0, "latest_stable_semver must not be empty string"
   arch = 32 if not platform.machine().endswith("64") else 64  # https://stackoverflow.com/a/12578715
   if sys.platform.startswith("win"):
-    return "http://nim-lang.org/download/nim-{}_x{}.zip".format(latest_stable_semver, arch)
+    return "https://nim-lang.org/download/nim-{}_x{}.zip".format(latest_stable_semver, arch)
   if sys.platform.startswith("linux"):
-    return "http://nim-lang.org/download/nim-{}-linux_x{}.tar.xz".format(latest_stable_semver, arch)
+    return "https://nim-lang.org/download/nim-{}-linux_x{}.tar.xz".format(latest_stable_semver, arch)
   assert False, "Operating system currently not supported."
 
 
