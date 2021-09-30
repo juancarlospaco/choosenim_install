@@ -61,6 +61,7 @@ def prepare_folders():
 
 def get_latest_stable_semver():
   try:
+    print("XXX", urllib.request.urlopen("https://nim-lang.org", context=contexto).read().strip())
     print("OK\tHTTP GET https://nim-lang.org/channels/stable")
     result = urllib.request.urlopen("https://nim-lang.org/channels/stable", context=contexto).read().strip()
   except:
@@ -68,6 +69,12 @@ def get_latest_stable_semver():
     warnings.warn("Failed to fetch latest stable semver, fallback to " + result)
   print("OK\tLatest stable version: " + result)
   return result
+
+
+def download(url, path):
+  with urllib.request.urlopen(url, context=contexto) as response:
+    with open(path, 'wb') as outfile:
+      shutil.copyfileobj(response, outfile)
 
 
 def get_link(latest_stable_semver):
@@ -78,12 +85,6 @@ def get_link(latest_stable_semver):
   if sys.platform.startswith("linux"):
     return "https://nim-lang.org/download/nim-{}-linux_x{}.tar.xz".format(latest_stable_semver, arch)
   assert False, "Operating system currently not supported."
-
-
-def download(url, path):
-  with urllib.request.urlopen(url, context=contexto) as response:
-    with open(path, 'wb') as outfile:
-      shutil.copyfileobj(response, outfile)
 
 
 def nim_setup(latest_stable_semver):
