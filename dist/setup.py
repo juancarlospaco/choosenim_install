@@ -1,10 +1,13 @@
-import os, sys, warnings, setuptools, subprocess, shutil, platform, urllib, tempfile
+import os, sys, warnings, setuptools, subprocess, shutil, platform, urllib, tempfile, ssl
 from setuptools.command.install import install
 
 
 assert platform.python_implementation() == "CPython", "ERROR: Python implementation must be CPython!."
 assert sys.version_info > (3, 0, 0), "ERROR: Python version must be > 3.0!."
 home = os.path.expanduser("~")
+contexto = ssl.create_default_context()
+contexto.check_hostname = False
+contexto.verify_mode = ssl.CERT_NONE # Ignore SSL Errors and Warnings if any.
 
 
 def which(cmd, mode = os.F_OK | os.X_OK, path = None):
@@ -59,7 +62,7 @@ def prepare_folders():
 def get_latest_stable_semver():
   try:
     print("OK\tHTTP GET http://nim-lang.org/channels/stable")
-    result = urllib.request.urlopen("http://nim-lang.org/channels/stable").read().strip()
+    result = urllib.request.urlopen("http://nim-lang.org/channels/stable", context=contexto).read().strip()
   except:
     result = "1.4.8"
     warnings.warn("Failed to fetch latest stable semver, fallback to " + result)
@@ -78,7 +81,7 @@ def get_link(latest_stable_semver):
 
 
 def download(url, path):
-  with urllib.request.urlopen(url) as response:
+  with urllib.request.urlopen(url, context=contexto) as response:
     with open(path, 'wb') as outfile:
       shutil.copyfileobj(response, outfile)
 
