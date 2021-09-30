@@ -58,6 +58,7 @@ def prepare_folders():
 
 def get_latest_stable_semver():
   try:
+    print("OK\tHTTP GET http://nim-lang.org/channels/stable")
     result = urllib.request.urlopen("http://nim-lang.org/channels/stable").read().strip()
   except:
     result = "1.4.8"
