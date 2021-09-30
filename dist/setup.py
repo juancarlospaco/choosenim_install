@@ -61,8 +61,8 @@ def prepare_folders():
 
 def get_latest_stable_semver():
   try:
-    print("OK\tHTTP GET http://nim-lang.org/channels/stable")
-    result = urllib.request.urlopen("http://nim-lang.org/channels/stable", context=contexto).read().strip()
+    print("OK\tHTTP GET https://nim-lang.org/channels/stable")
+    result = urllib.request.urlopen("https://nim-lang.org/channels/stable", context=contexto).read().strip()
   except:
     result = "1.4.8"
     warnings.warn("Failed to fetch latest stable semver, fallback to " + result)
