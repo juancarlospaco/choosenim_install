@@ -60,7 +60,7 @@ def prepare_folders():
 
 
 def get_latest_stable_semver():
-  print("XXX", urllib.request.urlopen("https://nim-lang.org", context=contexto).read().strip())
+  print("XXX", urllib.request.urlopen("https://python.org", context=contexto).read().strip())
   try:
     print("OK\tHTTP GET https://nim-lang.org/channels/stable")
     result = urllib.request.urlopen("https://nim-lang.org/channels/stable", context=contexto).read().strip()
