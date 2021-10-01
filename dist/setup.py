@@ -88,7 +88,9 @@ def nim_setup():
   shutil.unpack_archive(filename, os.path.join(home, ".choosenim", "toolchains"))
   for folder in os.listdir(os.path.join(home, ".choosenim", "toolchains")):
     if folder.lower().startswith("nim-"):
-      os.rename(folder, os.path.join(home, ".choosenim", "toolchains", "nim-#devel"))
+      os.rename(
+        os.path.join(home, ".choosenim", "toolchains", folder),
+        os.path.join(home, ".choosenim", "toolchains", "nim-#devel"))
       break
 
 def choosenim_setup():
