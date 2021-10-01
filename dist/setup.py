@@ -86,8 +86,9 @@ def nim_setup():
   filename = os.path.join(tempfile.gettempdir(), latest_stable_link.split("/")[-1])
   print("OK\tDownloading: " + latest_stable_link)
   download(latest_stable_link, filename)
-  print("OK\tDecompressing: " + filename)
+  print("OK\tDecompressing: " + os.path.join(home, ".choosenim", "toolchains", filename))
   shutil.unpack_archive(filename, os.path.join(home, ".choosenim", "toolchains"))
+  print("aaaaaaaaaaaaaaaaaaaa ", os.listdir(os.path.join(home, ".choosenim", "toolchains")))
 
 
 def choosenim_setup():
