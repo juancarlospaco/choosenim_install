@@ -59,8 +59,8 @@ def prepare_folders():
 
 def get_latest_stable_semver():
   try:
-    print("OK\tHTTP GET https://api.github.com/repos/nim-lang/Nim/tags")
-    result = json.loads(urllib.request.urlopen("https://api.github.com/repos/nim-lang/Nim/tags", context=contexto).read())[0]['name'][1:]
+    print("OK\tHTTP GET https://api.github.com/repos/nim-lang/nightlies/releases")
+    result = json.loads(urllib.request.urlopen("https://api.github.com/repos/nim-lang/nightlies/releases", context=contexto).read())[0]['name'][1:]
   except:
     result = "1.4.8"
     warnings.warn("Failed to fetch latest stable semver, fallback to " + result)
