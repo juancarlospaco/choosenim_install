@@ -88,8 +88,12 @@ def get_link(latest_stable_semver):
     jotason = json.loads(urllib.request.urlopen("https://api.github.com/repos/nim-lang/nightlies/releases", context=contexto).read())
     major = latest_stable_semver.split(".")[0]
     minor = latest_stable_semver.split(".")[1]
+    print("major ",  major)
+    print("minor ",  major)
+    print("filename ",  filename)
+
     for i in jotason:
-      if not "version-{}-{}".format(major, minor) in i['tag_name']:
+      if not "version-{}-{}".format(major, minor) in i['tag_name'].lower():
         continue
       for j in i['assets']:
         if j['name'].lower().endswith(filename):
