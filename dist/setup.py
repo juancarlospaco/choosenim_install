@@ -57,6 +57,17 @@ def prepare_folders():
       warnings.warn("Folder already exists: " + folder)
 
 
+def get_latest_stable_semver():
+  try:
+    print("OK\tHTTP GET https://api.github.com/repos/nim-lang/Nim/tags")
+    result = json.loads(urllib.request.urlopen("https://api.github.com/repos/nim-lang/Nim/tags", context=contexto).read())[0]['name'][1:]
+  except:
+    result = "1.4.8"
+    warnings.warn("Failed to fetch latest stable semver, fallback to " + result)
+  print("OK\tLatest stable version: " + result)
+  return result
+
+
 def download(url, path):
   with urllib.request.urlopen(url, context=contexto) as response:
     with open(path, 'wb') as outfile:
@@ -86,7 +97,8 @@ def nim_setup():
   download(latest_stable_link, filename)
   print("OK\tDecompressing: " + filename + " into " + os.path.join(home, ".choosenim", "toolchains"))
   shutil.unpack_archive(filename, os.path.join(home, ".choosenim", "toolchains"))
-  print("aaaaaaaaaaaaaaaaaaaa ", os.listdir(os.path.join(home, ".choosenim", "toolchains")))
+  print("SEMVER ", get_latest_stable_semver())
+  print("FOLDER ", os.listdir(os.path.join(home, ".choosenim", "toolchains")))
 
 
 def choosenim_setup():
