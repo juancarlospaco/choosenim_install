@@ -242,6 +242,7 @@ def nimble_setup():
         warnings.warn("Nim not found, tried 'nim' and " + nim_exe)
   if os.path.exists(nimble_exe):
     os.environ["PATH"] = "$PATH:" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin")
+    print("GIT ", which("git"))
     nimble_cmd = nimble_exe + " --accept --noColor --noSSLCheck --nim:" + nim_exe
     if subprocess.call(nimble_cmd + " refresh", shell=True, timeout=999) == 0:
       print("OK\t" + nimble_cmd + " --verbose refresh")
