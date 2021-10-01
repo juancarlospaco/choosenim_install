@@ -96,6 +96,9 @@ def nim_setup():
     shutil.copytree(
       os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin"),
       os.path.join(home, ".nimble", "bin"))
+    shutil.copytree(  # I dunno why Nimble wants this sometimes.
+      os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "lib"),
+      os.path.join(home, ".nimble", "lib"))
   except:
     warnings.warn("Failed to copy binaries into folder: " + os.path.join(home, ".nimble", "bin"))
 
