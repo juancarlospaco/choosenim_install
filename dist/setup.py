@@ -246,17 +246,17 @@ def nimble_setup():
     if subprocess.call(nimble_cmd + " refresh", shell=True, timeout=999) == 0:
       print("OK\t" + nimble_cmd + " --verbose refresh")
       if subprocess.call(nimble_cmd + " --tarballs install cpython", shell=True, timeout=999) == 0:
-        print("OK\t" + nimble_cmd + " install cpython")
+        print("OK\t" + nimble_cmd + " --tarballs install cpython")
       else:
-        warnings.warn("Failed to run '" + nimble_cmd + " install cpython'")
+        warnings.warn("Failed to run '" + nimble_cmd + " --tarballs install cpython'")
       if subprocess.call(nimble_cmd + " --tarballs install nodejs", shell=True, timeout=999) == 0:
-        print("OK\t" + nimble_cmd + " install nodejs")
+        print("OK\t" + nimble_cmd + " --tarballs install nodejs")
       else:
-        warnings.warn("Failed to run '" + nimble_cmd + " install nodejs'")
+        warnings.warn("Failed to run '" + nimble_cmd + " --tarballs install nodejs'")
       if subprocess.call(nimble_cmd + " --tarballs install fusion", shell=True, timeout=999) == 0:
-        print("OK\t" + nimble_cmd + " install fusion")
+        print("OK\t" + nimble_cmd + " --tarballs install fusion")
       else:
-        warnings.warn("Failed to run '" + nimble_cmd + " install fusion'")
+        warnings.warn("Failed to run '" + nimble_cmd + " --tarballs install fusion'")
     else:
       warnings.warn("Failed to run '" + nimble_cmd + " refresh'")
   else:
