@@ -59,17 +59,6 @@ def prepare_folders():
       warnings.warn("Folder already exists: " + folder)
 
 
-def get_latest_stable_semver():
-  try:
-    print("OK\tHTTP GET https://api.github.com/repos/nim-lang/Nim/tags")
-    result = json.loads(urllib.request.urlopen("https://api.github.com/repos/nim-lang/Nim/tags", context=contexto).read())[0]['name'][1:]
-  except:
-    result = "1.4.8"
-    warnings.warn("Failed to fetch latest stable semver, fallback to " + result)
-  print("OK\tLatest stable version: " + result)
-  return result
-
-
 def download(url, path):
   with urllib.request.urlopen(url, context=contexto) as response:
     with open(path, 'wb') as outfile:
@@ -89,11 +78,11 @@ def get_link():
   return result
 
 
-def nim_setup(latest_stable_semver):
+def nim_setup():
   # Basically this does the same as choosenim, but in pure Python,
   # so we dont need to "bundle" several choosenim EXEs, bash, etc.
   prepare_folders()
-  latest_stable_link = get_link(latest_stable_semver)
+  latest_stable_link = get_link()
   filename = os.path.join(tempfile.gettempdir(), latest_stable_link.split("/")[-1])
   print("OK\tDownloading: " + latest_stable_link)
   download(latest_stable_link, filename)
@@ -122,7 +111,7 @@ def choosenim_setup():
   return result
 
 
-def add_to_path(latest_stable_semver):
+def add_to_path():
   # On Linux add Nim to the PATH.
   # Android does not have .bashrc equivalent.
   if not sys.platform.startswith("win"):
@@ -209,7 +198,7 @@ def add_to_path(latest_stable_semver):
     except:
       warnings.warn("Failed to write file ~/.zshenv")
   else:  # Windows
-    finishexe = os.path.join(home, ".choosenim", "toolchains", "nim-" + latest_stable_semver, "finish.exe")
+    finishexe = os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "finish.exe")
     if os.path.exists(finishexe):
       if subprocess.call(finishexe, shell=True) != 0:
         warnings.warn("Failed to run: " + finishexe)
@@ -266,9 +255,8 @@ class X(install):
   def run(self):
     install.run(self)      # This is required by Python.
     if choosenim_setup():  # Check if choosenim is already installed.
-      latest_stable_semver = get_latest_stable_semver() # Get latest semver.
-      nim_setup(latest_stable_semver)                   # Install Nim.
-      add_to_path(latest_stable_semver)                 # Add to PATH.
+      nim_setup()                   # Install Nim.
+      add_to_path()                 # Add to PATH.
       if not self.nimble_setup():                       # Update Nimble.
         warnings.warn("Failed to setup Nimble")
     else:
