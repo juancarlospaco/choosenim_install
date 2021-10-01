@@ -1,4 +1,4 @@
-import os, sys, warnings, setuptools, subprocess, shutil, platform, urllib, tempfile, ssl
+import os, sys, warnings, setuptools, subprocess, shutil, platform, urllib, tempfile, ssl, json
 from setuptools.command.install import install
 
 
@@ -60,10 +60,9 @@ def prepare_folders():
 
 
 def get_latest_stable_semver():
-  print("XXX", urllib.request.urlopen("https://nim-lang.org", context=contexto).read().strip())
   try:
-    print("OK\tHTTP GET https://nim-lang.org/channels/stable")
-    result = urllib.request.urlopen("https://nim-lang.org/channels/stable", context=contexto).read().strip()
+    print("OK\tHTTP GET https://api.github.com/repos/nim-lang/Nim/tags")
+    result = json.loads(urllib.request.urlopen("https://api.github.com/repos/nim-lang/Nim/tags", context=contexto).read())[0]['name'][1:]
   except:
     result = "1.4.8"
     warnings.warn("Failed to fetch latest stable semver, fallback to " + result)
