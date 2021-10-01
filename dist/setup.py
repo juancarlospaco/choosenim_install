@@ -57,17 +57,6 @@ def prepare_folders():
       warnings.warn("Folder already exists: " + folder)
 
 
-def get_latest_stable_semver():
-  try:
-    print("OK\tHTTP GET https://api.github.com/repos/nim-lang/nightlies/releases")
-    result = json.loads(urllib.request.urlopen("https://api.github.com/repos/nim-lang/nightlies/releases", context=contexto).read())[0]['name'][1:]
-  except:
-    result = "1.4.8"
-    warnings.warn("Failed to fetch latest stable semver, fallback to " + result)
-  print("OK\tLatest stable version: " + result)
-  return result
-
-
 def download(url, path):
   with urllib.request.urlopen(url, context=contexto) as response:
     with open(path, 'wb') as outfile:
@@ -97,9 +86,10 @@ def nim_setup():
   download(latest_stable_link, filename)
   print("OK\tDecompressing: " + filename + " into " + os.path.join(home, ".choosenim", "toolchains"))
   shutil.unpack_archive(filename, os.path.join(home, ".choosenim", "toolchains"))
-  print("SEMVER ", get_latest_stable_semver())
-  print("FOLDER ", os.listdir(os.path.join(home, ".choosenim", "toolchains")))
-
+  for folder in os.listdir(os.path.join(home, ".choosenim", "toolchains")):
+    if folder.lower().startswith("nim-"):
+      os.rename(folder, os.path.join(home, ".choosenim", "toolchains", "nim-#devel"))
+      break
 
 def choosenim_setup():
   # We have to check if the user has choosenim already working.
