@@ -128,7 +128,7 @@ def add_to_path():
   # On Linux add Nim to the PATH.
   # Android does not have .bashrc equivalent.
   if not sys.platform.startswith("win"):
-    new_path = "export PATH=" os.path.join(home, ".nimble", "bin") + ":" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + ":$PATH"
+    new_path = "export PATH=" + os.path.join(home, ".nimble", "bin") + ":" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + ":$PATH"
     filename = os.path.join(home, ".bashrc")
     try:
       if filename.exists():
