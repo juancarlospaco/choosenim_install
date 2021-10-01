@@ -128,7 +128,7 @@ def add_to_path():
   # On Linux add Nim to the PATH.
   # Android does not have .bashrc equivalent.
   if not sys.platform.startswith("win"):
-    new_path = "export PATH=" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + ":$PATH"
+    new_path = "export PATH=" os.path.join(home, ".nimble", "bin") + ":" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + ":$PATH"
     filename = os.path.join(home, ".bashrc")
     try:
       if filename.exists():
@@ -241,7 +241,7 @@ def nimble_setup():
       if subprocess.call(nim_exe + " --version", shell=True, timeout=99) != 0:
         warnings.warn("Nim not found, tried 'nim' and " + nim_exe)
   if os.path.exists(nimble_exe):
-    os.environ["PATH"] = "$PATH:" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin")
+    os.environ["PATH"] = os.environ["PATH"] + os.path.join(home, ".nimble", "bin") + ":" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin")
     nimble_cmd = nimble_exe + " --accept --noColor --noSSLCheck --nim:" + nim_exe
     if subprocess.call(nimble_cmd + " refresh", shell=True, timeout=999) == 0:
       print("OK\t" + nimble_cmd + " --verbose refresh")
@@ -270,9 +270,9 @@ class X(install):
     install.run(self)      # This is required by Python.
     if choosenim_setup():  # Check if choosenim is already installed.
       nim_setup()                   # Install Nim.
+      add_to_path()                 # Add to PATH.
       if not nimble_setup():                       # Update Nimble.
         warnings.warn("Failed to setup Nimble")
-      add_to_path()                 # Add to PATH.
     else:
       raise Exception(IOError, "Failed to install Nim")
 
