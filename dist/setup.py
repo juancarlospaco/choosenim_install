@@ -84,7 +84,7 @@ def nim_setup():
   filename = os.path.join(tempfile.gettempdir(), latest_stable_link.split("/")[-1])
   print("OK\tDownloading: " + latest_stable_link)
   download(latest_stable_link, filename)
-  print("OK\tDecompressing: " + filename + " into " + os.path.join(home, ".choosenim", "toolchains"))
+  print("OK\tDecompressing: " + filename + " into " + os.path.join(home, ".choosenim", "toolchains", "nim-#devel"))
   shutil.unpack_archive(filename, os.path.join(home, ".choosenim", "toolchains"))
   for folder in os.listdir(os.path.join(home, ".choosenim", "toolchains")):
     if folder.lower().startswith("nim-"):
@@ -92,6 +92,11 @@ def nim_setup():
         os.path.join(home, ".choosenim", "toolchains", folder),
         os.path.join(home, ".choosenim", "toolchains", "nim-#devel"))
       break
+  print("OK\Copying: " + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + " into " + os.path.join(home, ".nimble", "bin"))
+  shutil.copytree(
+    os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin"),
+    os.path.join(home, ".nimble", "bin"))
+
 
 def choosenim_setup():
   # We have to check if the user has choosenim already working.
@@ -118,7 +123,7 @@ def add_to_path():
   # On Linux add Nim to the PATH.
   # Android does not have .bashrc equivalent.
   if not sys.platform.startswith("win"):
-    new_path = "export PATH=" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + ":$PATH"
+    new_path = "export PATH=" + os.path.join(home, ".nimble", "bin") + ":$PATH"
     filename = os.path.join(home, ".bashrc")
     try:
       if filename.exists():
