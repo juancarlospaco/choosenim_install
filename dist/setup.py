@@ -42,7 +42,6 @@ def which(cmd, mode = os.F_OK | os.X_OK, path = None):
 def prepare_folders():
   folders2create = (
     os.path.join(home, ".nimble"),
-    os.path.join(home, ".nimble", "bin"),
     os.path.join(home, ".nimble", "pkgs"),
     os.path.join(home, ".choosenim"),
     os.path.join(home, ".choosenim", "channels"),
@@ -92,10 +91,13 @@ def nim_setup():
         os.path.join(home, ".choosenim", "toolchains", folder),
         os.path.join(home, ".choosenim", "toolchains", "nim-#devel"))
       break
-  print("OK\Copying: " + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + " into " + os.path.join(home, ".nimble", "bin"))
-  shutil.copytree(
-    os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin"),
-    os.path.join(home, ".nimble", "bin"))
+  print("OK\tCopying: " + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + " into " + os.path.join(home, ".nimble", "bin"))
+  try:
+    shutil.copytree(
+      os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin"),
+      os.path.join(home, ".nimble", "bin"))
+  except:
+    warnings.warn("Failed to copy binaries into folder: " + os.path.join(home, ".nimble", "bin"))
 
 
 def choosenim_setup():
