@@ -48,8 +48,6 @@ def prepare_folders():
     os.path.join(home, ".choosenim", "channels"),
     os.path.join(home, ".choosenim", "downloads"),
     os.path.join(home, ".choosenim", "toolchains"),
-    os.path.join(home, ".choosenim", "toolchains", "mingw64"),
-    os.path.join(home, ".choosenim", "toolchains", "nim-#devel"),
   )
   for folder in folders2create:
     if not os.path.exists(folder):  # Older Python do not have exists_ok
@@ -86,7 +84,7 @@ def nim_setup():
   filename = os.path.join(tempfile.gettempdir(), latest_stable_link.split("/")[-1])
   print("OK\tDownloading: " + latest_stable_link)
   download(latest_stable_link, filename)
-  print("OK\tDecompressing: " + os.path.join(home, ".choosenim", "toolchains", filename))
+  print("OK\tDecompressing: " + filename + " into " + os.path.join(home, ".choosenim", "toolchains"))
   shutil.unpack_archive(filename, os.path.join(home, ".choosenim", "toolchains"))
   print("aaaaaaaaaaaaaaaaaaaa ", os.listdir(os.path.join(home, ".choosenim", "toolchains")))
 
