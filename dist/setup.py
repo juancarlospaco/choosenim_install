@@ -270,9 +270,9 @@ class X(install):
     install.run(self)      # This is required by Python.
     if choosenim_setup():  # Check if choosenim is already installed.
       nim_setup()                   # Install Nim.
-      add_to_path()                 # Add to PATH.
       if not nimble_setup():                       # Update Nimble.
         warnings.warn("Failed to setup Nimble")
+      add_to_path()                 # Add to PATH.
     else:
       raise Exception(IOError, "Failed to install Nim")
 
