@@ -76,32 +76,17 @@ def download(url, path):
       shutil.copyfileobj(response, outfile)
 
 
-def get_link(latest_stable_semver):
-  assert len(latest_stable_semver) > 0, "latest_stable_semver must not be empty string"
-  try:
-    arch = 32 if not platform.machine().endswith("64") else 64  # https://stackoverflow.com/a/12578715
-    if sys.platform.startswith("win"):
-      filename = "nim-{}_x{}.zip".format(latest_stable_semver, arch)
-    if sys.platform.startswith("linux"):
-      filename = "nim-{}-linux_x{}.tar.xz".format(latest_stable_semver, arch)
-    print("OK\tHTTP GET https://api.github.com/repos/nim-lang/nightlies/releases")
-    jotason = json.loads(urllib.request.urlopen("https://api.github.com/repos/nim-lang/nightlies/releases", context=contexto).read())
-    major = latest_stable_semver.split(".")[0]
-    minor = latest_stable_semver.split(".")[1]
-    print("major ",  major)
-    print("minor ",  major)
-    print("filename ",  filename)
-
-    for i in jotason:
-      if not "version-{}-{}".format(major, minor) in i['tag_name'].lower():
-        continue
-      for j in i['assets']:
-        if j['name'].lower().endswith(filename):
-          print("OK\tHTTP GET " + j['browser_download_url'])
-          return j['browser_download_url']
-  except:
-    warnings.warn("Failed to fetch latest stable download link")
-  assert False, "Operating system currently not supported or download not available or unkown network error."
+def get_link():
+  arch = 32 if not platform.machine().endswith("64") else 64  # https://stackoverflow.com/a/12578715
+  result = None
+  if sys.platform.startswith("linux"):
+    result = "https://github.com/nim-lang/nightlies/releases/download/latest-devel/linux_x{}.tar.xz".format(arch)
+  elif sys.platform.startswith("win"):
+    result = "https://github.com/nim-lang/nightlies/releases/download/latest-devel/windows_x{}.zip".format(arch)
+  elif sys.platform.startswith("darwin"):
+    result = "https://github.com/nim-lang/nightlies/releases/download/latest-devel/macosx_x{}.tar.xz".format(arch)
+  assert result is not None, "Operating system or hardware architecture not supported or download not available or unkown network error."
+  return result
 
 
 def nim_setup(latest_stable_semver):
