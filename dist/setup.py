@@ -198,7 +198,7 @@ def add_to_path():
     except:
       warnings.warn("Failed to write file ~/.zshenv")
   else:  # Windows
-    finishexe = os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "finish.exe")
+    finishexe = os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "finish.exe")
     if os.path.exists(finishexe):
       if subprocess.call(finishexe, shell=True) != 0:
         warnings.warn("Failed to run: " + finishexe)
@@ -213,7 +213,7 @@ def nimble_setup():
   # as "nimble" or "~/.nimble/bin/nimble", then install nimpy and fusion
   result = False
   ext = ".exe" if sys.platform.startswith("win") else ""
-  nimble_exe = which("nimble" + ext)  # Try "nimble"
+  nimble_exe = os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "nimble" + ext)
   if subprocess.call(nimble_exe + " --version", shell=True, timeout=99) != 0:
     nimble_exe = os.path.join(home, '.nimble', 'bin', "nimble" + ext)  # Try full path to "nimble"
     if subprocess.call(nimble_exe + " --version", shell=True, timeout=99) != 0:
