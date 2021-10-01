@@ -78,12 +78,26 @@ def download(url, path):
 
 def get_link(latest_stable_semver):
   assert len(latest_stable_semver) > 0, "latest_stable_semver must not be empty string"
-  arch = 32 if not platform.machine().endswith("64") else 64  # https://stackoverflow.com/a/12578715
-  if sys.platform.startswith("win"):
-    return "https://nim-lang.org/download/nim-{}_x{}.zip".format(latest_stable_semver, arch)
-  if sys.platform.startswith("linux"):
-    return "https://nim-lang.org/download/nim-{}-linux_x{}.tar.xz".format(latest_stable_semver, arch)
-  assert False, "Operating system currently not supported."
+  try:
+    arch = 32 if not platform.machine().endswith("64") else 64  # https://stackoverflow.com/a/12578715
+    if sys.platform.startswith("win"):
+      filename = "nim-{}_x{}.zip".format(latest_stable_semver, arch)
+    if sys.platform.startswith("linux"):
+      filename = "nim-{}-linux_x{}.tar.xz".format(latest_stable_semver, arch)
+    print("OK\tHTTP GET https://api.github.com/repos/nim-lang/nightlies/releases")
+    jotason = json.loads(urllib.request.urlopen("https://api.github.com/repos/nim-lang/nightlies/releases", context=contexto).read())
+    major = latest_stable_semver.split(".")[0]
+    minor = latest_stable_semver.split(".")[1]
+    for i in jotason:
+      if not "version-{}-{}".format(major, minor) in i['tag_name']:
+        continue
+      for j in i['assets']:
+        if j['name'].lower().endswith(filename):
+          print("OK\tHTTP GET " + j['browser_download_url'])
+          return j['browser_download_url']
+  except:
+    warnings.warn("Failed to fetch latest stable download link")
+  assert False, "Operating system currently not supported or download not available or unkown network error."
 
 
 def nim_setup(latest_stable_semver):
