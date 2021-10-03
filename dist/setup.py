@@ -40,14 +40,21 @@ def which(cmd, mode = os.F_OK | os.X_OK, path = None):
 
 
 def prepare_folders():
-  folders2create = (
+  folders2create = [
+    os.path.join(home, ".local"),
+    os.path.join(home, ".local", "bin"),
     os.path.join(home, ".nimble"),
     os.path.join(home, ".nimble", "pkgs"),
     os.path.join(home, ".choosenim"),
     os.path.join(home, ".choosenim", "channels"),
     os.path.join(home, ".choosenim", "downloads"),
     os.path.join(home, ".choosenim", "toolchains"),
-  )
+  ]
+  if sys.platform.startswith("linux"):
+    folders2create.append(os.path.join(home, ".local"))
+    folders2create.append(os.path.join(home, ".local", "bin"))
+  elif sys.platform.startswith("darwin"):
+    folders2create.append(os.path.join(home, "bin"))
   for folder in folders2create:
     if not os.path.exists(folder):  # Older Python do not have exists_ok
       print("OK\tCreate folder: " + folder)
@@ -91,14 +98,30 @@ def nim_setup():
         os.path.join(home, ".choosenim", "toolchains", folder),
         os.path.join(home, ".choosenim", "toolchains", "nim-#devel"))
       break
-  print("OK\tCopying: " + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + " into " + os.path.join(home, ".nimble", "bin"))
   try:
+    print("OK\tCopying: " + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + " into " + os.path.join(home, ".nimble", "bin"))
     shutil.copytree(
       os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin"),
       os.path.join(home, ".nimble", "bin"))
     shutil.copytree(  # I dunno why Nimble wants this sometimes.
       os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "lib"),
       os.path.join(home, ".nimble", "lib"))
+
+    if sys.platform.startswith("linux"):
+      print("OK\tCopying: " + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + " into " + os.path.join(home, ".local", "bin"))
+      shutil.copytree(
+        os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin"),
+        os.path.join(home, ".local", "bin"))
+    elif sys.platform.startswith("darwin"):
+      print("OK\tCopying: " + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + " into " + os.path.join(home, "bin"))
+      shutil.copytree(
+        os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin"),
+        os.path.join(home, "bin"))
+
+    shutil.copytree(
+      os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin"),
+      os.path.join(home, ".nimble", "lib"))
+
   except:
     warnings.warn("Failed to copy binaries into folder: " + os.path.join(home, ".nimble", "bin"))
 
