@@ -148,10 +148,9 @@ def choosenim_setup():
   return result
 
 
-def to_path(filename):
+def add_to_path(filename):
   new_path = "export PATH=" + os.path.join(home, ".nimble", "bin") + ":" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + ":$PATH"
   filename = os.path.join(home, filename)
-  # if os.path.exists(filename) and os.path.isfile(filename) and os.access(filename, os.R_OK | os.W_OK):
   try:
     found = False
     with open(filename, "a") as f:
@@ -165,33 +164,16 @@ def to_path(filename):
     print("OK\tWriting to " + filename)
     with open(filename, "w") as f:
       f.write(new_path)
-      #print("OK\t" + filename)
-    # except:
-    #   print("ER\tFailed to write file: " + filename)
 
-
-def add_to_path():
-  # On Linux add Nim to the PATH.
-  # Android does not have .bashrc equivalent.
-  if not sys.platform.startswith("win"):
-    to_path(".bashrc")
-    to_path(".profile")
-    to_path(".bash_profile")
-    to_path(".zshrc")
-    to_path(".zshenv")
-    # if subprocess.call(new_path, shell=True, timeout=99) == 0:
-    #   print("OK\tAdded to PATH: " + new_path)
-    # else:
-    #   print("ER\tFailed to add to PATH: " + new_path)
-  else:  # Windows
-    finishexe = os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "finish.exe")
-    if os.path.exists(finishexe):
-      if subprocess.call(finishexe, shell=True) != 0:
-        print("ER\tFailed to run: " + finishexe)
-      else:
-        print("ER\tReboot to finish installation!")
+def run_finishexe():
+  finishexe = os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "finish.exe")
+  if os.path.exists(finishexe):
+    if subprocess.call(finishexe, shell=True) != 0:
+      print("ER\tFailed to run: " + finishexe)
     else:
-      print("ER\tFile not found: " + finishexe)
+      print("ER\tReboot to finish installation!")
+  else:
+    print("ER\tFile not found: " + finishexe)
 
 
 def nimble_setup():
@@ -243,7 +225,14 @@ class X(install):
     install.run(self)      # This is required by Python.
     if choosenim_setup():  # Check if choosenim is already installed.
       nim_setup()                   # Install Nim.
-      add_to_path()                 # Add to PATH.
+      if not sys.platform.startswith("win"):
+        add_to_path(".bashrc")
+        add_to_path(".profile")
+        add_to_path(".bash_profile")
+        add_to_path(".zshrc")
+        add_to_path(".zshenv")
+      else:  # Windows
+        run_finishexe()
       if not nimble_setup():                       # Update Nimble.
         print("ER\tFailed to setup Nimble")
     else:
