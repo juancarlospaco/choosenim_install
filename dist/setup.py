@@ -1,4 +1,4 @@
-import os, sys, warnings, setuptools, subprocess, shutil, platform, urllib, tempfile, ssl, json
+import os, sys, setuptools, subprocess, shutil, platform, urllib, tempfile, ssl, json
 from setuptools.command.install import install
 
 
@@ -35,7 +35,7 @@ def which(cmd, mode = os.F_OK | os.X_OK, path = None):
         name = os.path.join(dir, thefile)
         if _access_check(name, mode):
           return name
-  warnings.warn("shutil.which can not find executable " + cmd)
+  print("ER\tshutil.which can not find executable " + cmd)
   return cmd
 
 
@@ -60,7 +60,7 @@ def prepare_folders():
       print("OK\tCreate folder: " + folder)
       os.makedirs(folder)
     else:
-      warnings.warn("Folder already exists: " + folder)
+      print("ER\tFolder already exists: " + folder)
 
 
 def download(url, path):
@@ -123,7 +123,7 @@ def nim_setup():
       os.path.join(home, ".nimble", "lib"))
 
   except:
-    warnings.warn("Failed to copy binaries into folder: " + os.path.join(home, ".nimble", "bin"))
+    print("ER\tFailed to copy binaries into folder: " + os.path.join(home, ".nimble", "bin"))
 
 
 def choosenim_setup():
@@ -135,13 +135,13 @@ def choosenim_setup():
   shutil.rmtree(os.path.join(home, ".choosenim", "downloads"), ignore_errors=True)  # Clear download cache.
   choosenim_exe = "choosenim.exe" if sys.platform.startswith("win") else "choosenim"
   if subprocess.call(choosenim_exe + " --version", shell=True, timeout=999) == 0:
-    warnings.warn("Choosenim is already installed and working on the system " + choosenim_exe)
+    print("ER\tChoosenim is already installed and working on the system " + choosenim_exe)
     if subprocess.call(choosenim_exe + " update self", shell=True, timeout=999) != 0:
-      warnings.warn("Failed to run '" + choosenim_exe + " update self'")  # Dont worry if "update self" fails.
+      print("ER\tFailed to run '" + choosenim_exe + " update self'")  # Dont worry if "update self" fails.
     if subprocess.call(choosenim_exe + " update stable", shell=True, timeout=999) == 0:
       result = True
     else:
-      warnings.warn("Failed to run '" + choosenim_exe + " update stable'")
+      print("ER\tFailed to run '" + choosenim_exe + " update stable'")
   else:
     result = True
   return result
@@ -167,7 +167,7 @@ def add_to_path():
           f.write(new_path)
       print("OK\t" + filename)
     except:
-      warnings.warn("Failed to write file: " + filename)
+      print("ER\tFailed to write file: " + filename)
     filename = os.path.join(home, ".profile")
     try:
       if filename.exists():
@@ -183,7 +183,7 @@ def add_to_path():
           f.write(new_path)
       print("OK\t" + filename)
     except:
-      warnings.warn("Failed to write file ~/.profile")
+      print("ER\tFailed to write file ~/.profile")
     filename = os.path.join(home, ".bash_profile")
     try:
       if filename.exists():
@@ -199,7 +199,7 @@ def add_to_path():
           f.write(new_path)
       print("OK\t" + filename)
     except:
-      warnings.warn("Failed to write file ~/.bash_profile")
+      print("ER\tFailed to write file ~/.bash_profile")
     filename = os.path.join(home, ".zshrc")
     try:
       if filename.exists():
@@ -215,7 +215,7 @@ def add_to_path():
           f.write(new_path)
       print("OK\t" + filename)
     except:
-      warnings.warn("Failed to write file ~/.zshrc")
+      print("ER\tFailed to write file ~/.zshrc")
     # https://github.com/juancarlospaco/choosenim_install/issues/4
     filename = os.path.join(home, ".zshenv")
     try:
@@ -232,20 +232,20 @@ def add_to_path():
           f.write(new_path)
       print("OK\t" + filename)
     except:
-      warnings.warn("Failed to write file ~/.zshenv")
+      print("ER\tFailed to write file ~/.zshenv")
     if subprocess.call(new_path, shell=True, timeout=99) == 0:
       print("OK\tAdded to PATH: " + new_path)
     else:
-      warnings.warn("Failed to add to PATH: " + new_path)
+      print("ER\tFailed to add to PATH: " + new_path)
   else:  # Windows
     finishexe = os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "finish.exe")
     if os.path.exists(finishexe):
       if subprocess.call(finishexe, shell=True) != 0:
-        warnings.warn("Failed to run: " + finishexe)
+        print("ER\tFailed to run: " + finishexe)
       else:
-        warnings.warn("Reboot to finish installation!")
+        print("ER\tReboot to finish installation!")
     else:
-      warnings.warn("File not found: " + finishexe)
+      print("ER\tFile not found: " + finishexe)
 
 
 def nimble_setup():
@@ -259,14 +259,14 @@ def nimble_setup():
     if subprocess.call(nimble_exe + " --version", shell=True, timeout=99) != 0:
       nimble_exe = "nimble"
       if subprocess.call(nimble_exe + " --version", shell=True, timeout=99) != 0:
-        warnings.warn("Nim not found, tried 'nimble' and " + nimble_exe)
+        print("ER\tNim not found, tried 'nimble' and " + nimble_exe)
   nim_exe = os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "nim" + ext)
   if subprocess.call(nim_exe + " --version", shell=True, timeout=99) != 0:
     nim_exe = os.path.join(home, '.nimble', 'bin', "nim" + ext)  # Try full path to "nim"
     if subprocess.call(nim_exe + " --version", shell=True, timeout=99) != 0:
       nim_exe = "nim"
       if subprocess.call(nim_exe + " --version", shell=True, timeout=99) != 0:
-        warnings.warn("Nim not found, tried 'nim' and " + nim_exe)
+        print("ER\tNim not found, tried 'nim' and " + nim_exe)
   if os.path.exists(nimble_exe):
     new_path = "PATH=" + os.path.join(home, ".nimble", "bin") + ":$PATH"
     # os.environ["PATH"] = os.environ["PATH"] + os.path.join(home, ".nimble", "bin") + ":" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin")
@@ -276,19 +276,19 @@ def nimble_setup():
       if subprocess.call(nimble_cmd + " --tarballs install cpython", shell=True, timeout=999) == 0:
         print("OK\t" + nimble_cmd + " --tarballs install cpython")
       else:
-        warnings.warn("Failed to run '" + nimble_cmd + " --tarballs install cpython'")
+        print("ER\tFailed to run '" + nimble_cmd + " --tarballs install cpython'")
       if subprocess.call(nimble_cmd + " --tarballs install nodejs", shell=True, timeout=999) == 0:
         print("OK\t" + nimble_cmd + " --tarballs install nodejs")
       else:
-        warnings.warn("Failed to run '" + nimble_cmd + " --tarballs install nodejs'")
+        print("ER\tFailed to run '" + nimble_cmd + " --tarballs install nodejs'")
       if subprocess.call(nimble_cmd + " --tarballs install fusion", shell=True, timeout=999) == 0:
         print("OK\t" + nimble_cmd + " --tarballs install fusion")
       else:
-        warnings.warn("Failed to run '" + nimble_cmd + " --tarballs install fusion'")
+        print("ER\tFailed to run '" + nimble_cmd + " --tarballs install fusion'")
     else:
-      warnings.warn("Failed to run '" + nimble_cmd + " refresh'")
+      print("ER\tFailed to run '" + nimble_cmd + " refresh'")
   else:
-    warnings.warn("File not found " + nimble_exe)
+    print("ER\tFile not found " + nimble_exe)
   return result
 
 
@@ -300,7 +300,7 @@ class X(install):
       nim_setup()                   # Install Nim.
       add_to_path()                 # Add to PATH.
       if not nimble_setup():                       # Update Nimble.
-        warnings.warn("Failed to setup Nimble")
+        print("ER\tFailed to setup Nimble")
     else:
       raise Exception(IOError, "Failed to install Nim")
 
