@@ -245,7 +245,7 @@ def nimble_setup():
       if subprocess.call(nim_exe + " --version", shell=True, timeout=99) != 0:
         warnings.warn("Nim not found, tried 'nim' and " + nim_exe)
   if os.path.exists(nimble_exe):
-    new_path = "PATH=" + os.path.join(home, ".nimble", "bin") + ":" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + ":$PATH"
+    new_path = "PATH=" + os.path.join(home, ".nimble", "bin") + ":$PATH"
     # os.environ["PATH"] = os.environ["PATH"] + os.path.join(home, ".nimble", "bin") + ":" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin")
     nimble_cmd = new_path + "  " + nimble_exe + " --accept --noColor --noSSLCheck " # + nim_exe
     if subprocess.call(nimble_cmd + " refresh", shell=True, timeout=999) == 0:
