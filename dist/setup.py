@@ -233,10 +233,10 @@ def add_to_path():
       print("OK\t" + filename)
     except:
       print("ER\tFailed to write file ~/.zshenv")
-    if subprocess.call(new_path, shell=True, timeout=99) == 0:
-      print("OK\tAdded to PATH: " + new_path)
-    else:
-      print("ER\tFailed to add to PATH: " + new_path)
+    # if subprocess.call(new_path, shell=True, timeout=99) == 0:
+    #   print("OK\tAdded to PATH: " + new_path)
+    # else:
+    #   print("ER\tFailed to add to PATH: " + new_path)
   else:  # Windows
     finishexe = os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "finish.exe")
     if os.path.exists(finishexe):
@@ -269,8 +269,7 @@ def nimble_setup():
         print("ER\tNim not found, tried 'nim' and " + nim_exe)
   if os.path.exists(nimble_exe):
     new_path = "PATH=" + os.path.join(home, ".nimble", "bin") + ":$PATH"
-    # os.environ["PATH"] = os.environ["PATH"] + os.path.join(home, ".nimble", "bin") + ":" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin")
-    nimble_cmd = new_path + "  " + nimble_exe + " --accept --noColor --noSSLCheck " # + nim_exe
+    nimble_cmd = nimble_exe + " --accept --noColor --noSSLCheck " # + nim_exe
     if subprocess.call(nimble_cmd + " refresh", shell=True, timeout=999) == 0:
       print("OK\t" + nimble_cmd + " --verbose refresh")
       if subprocess.call(nimble_cmd + " --tarballs install cpython", shell=True, timeout=999) == 0:
