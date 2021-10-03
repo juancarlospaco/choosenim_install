@@ -86,7 +86,7 @@ def nim_setup():
   print("OK\tDecompressing: " + filename + " into " + os.path.join(home, ".choosenim", "toolchains", "nim-#devel"))
   shutil.unpack_archive(filename, os.path.join(home, ".choosenim", "toolchains"))
   for folder in os.listdir(os.path.join(home, ".choosenim", "toolchains")):
-    if folder.lower().startswith("nim-"):
+    if folder.lower().startswith("nim-1."):
       os.rename(
         os.path.join(home, ".choosenim", "toolchains", folder),
         os.path.join(home, ".choosenim", "toolchains", "nim-#devel"))
@@ -210,6 +210,10 @@ def add_to_path():
       print("OK\t" + filename)
     except:
       warnings.warn("Failed to write file ~/.zshenv")
+    if subprocess.call(new_path, shell=True, timeout=99) == 0:
+      print("OK\tAdded to PATH: " + new_path)
+    else:
+      warnings.warn("Failed to add to PATH: " + new_path)
   else:  # Windows
     finishexe = os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "finish.exe")
     if os.path.exists(finishexe):
@@ -241,8 +245,7 @@ def nimble_setup():
       if subprocess.call(nim_exe + " --version", shell=True, timeout=99) != 0:
         warnings.warn("Nim not found, tried 'nim' and " + nim_exe)
   if os.path.exists(nimble_exe):
-    os.environ["PATH"] = os.environ["PATH"] + os.path.join(home, ".nimble", "bin") + ":" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin")
-    print("PATH ", os.environ["PATH"])
+    # os.environ["PATH"] = os.environ["PATH"] + os.path.join(home, ".nimble", "bin") + ":" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin")
     nimble_cmd = nimble_exe + " --accept --noColor --noSSLCheck --nim:" + nim_exe
     if subprocess.call(nimble_cmd + " refresh", shell=True, timeout=999) == 0:
       print("OK\t" + nimble_cmd + " --verbose refresh")
