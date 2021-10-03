@@ -147,7 +147,7 @@ def add_to_path(filename):
 
 
 def run_finishexe():
-  finishexe = os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "finish.exe")
+  finishexe = os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "finish.exe -y")
   if os.path.exists(finishexe):
     if subprocess.call(finishexe, shell=True) != 0:
       print("ER\tFailed to run: " + finishexe)
