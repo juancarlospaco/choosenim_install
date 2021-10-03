@@ -152,6 +152,7 @@ def to_path(filename):
   filename = os.path.join(home, filename)
   #try:
   if os.path.exists(filename) and os.path.isfile(filename) and os.access(filename, os.R_OK | os.W_OK):
+    print("OK\tAppending to " + filename)
     found = False
     with open(filename, "a") as f:
       for line in f:
@@ -160,6 +161,7 @@ def to_path(filename):
       if not found:
         f.write(new_path)
   else:
+    print("OK\Writing to " + filename)
     with open(filename, "w") as f:
       f.write(new_path)
       #print("OK\t" + filename)
