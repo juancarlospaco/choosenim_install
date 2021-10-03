@@ -20,7 +20,6 @@ jobs:
     - name: Set Environment Variables
       uses: allenevans/set-env@v2.0.0
       with:
-        PATH: "~/.choosenim/toolchains/nim-#devel/bin:$PATH"
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 
     # --use-feature=in-tree-build
