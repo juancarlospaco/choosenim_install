@@ -45,6 +45,7 @@ def prepare_folders():
     os.path.join(home, ".local", "bin"),
     os.path.join(home, ".nimble"),
     os.path.join(home, ".nimble", "pkgs"),
+    os.path.join(home, ".nimble", "bin"),
     os.path.join(home, ".choosenim"),
     os.path.join(home, ".choosenim", "channels"),
     os.path.join(home, ".choosenim", "downloads"),
@@ -152,16 +153,16 @@ def to_path(filename):
   filename = os.path.join(home, filename)
   # if os.path.exists(filename) and os.path.isfile(filename) and os.access(filename, os.R_OK | os.W_OK):
   try:
-    print("OK\tAppending to " + filename)
     found = False
     with open(filename, "a") as f:
+      print("OK\tAppending to " + filename)
       for line in f:
         if new_path == line:
           found = True
       if not found:
         f.write(new_path)
   except:
-    print("OK\Writing to " + filename)
+    print("OK\tWriting to " + filename)
     with open(filename, "w") as f:
       f.write(new_path)
       #print("OK\t" + filename)
