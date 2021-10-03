@@ -216,6 +216,12 @@ def nimble_setup():
   return result
 
 
+def postinstall():
+  shutil.rmtree(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "docs"), ignore_errors=True)
+  shutil.rmtree(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "tests"), ignore_errors=True)
+  shutil.rmtree(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "dist", "nimble", "tests"), ignore_errors=True)
+
+
 class X(install):
 
   def run(self):
@@ -232,6 +238,7 @@ class X(install):
         run_finishexe()
       if not nimble_setup():                       # Update Nimble.
         print("ER\tFailed to setup Nimble")
+      postinstall()
     else:
       raise Exception(IOError, "Failed to install Nim")
 
