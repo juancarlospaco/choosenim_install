@@ -150,8 +150,8 @@ def choosenim_setup():
 def to_path(filename):
   new_path = "export PATH=" + os.path.join(home, ".nimble", "bin") + ":" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + ":$PATH"
   filename = os.path.join(home, filename)
-  #try:
   if os.path.exists(filename) and os.path.isfile(filename) and os.access(filename, os.R_OK | os.W_OK):
+  try:
     print("OK\tAppending to " + filename)
     found = False
     with open(filename, "a") as f:
@@ -160,7 +160,7 @@ def to_path(filename):
           found = True
       if not found:
         f.write(new_path)
-  else:
+  except:
     print("OK\Writing to " + filename)
     with open(filename, "w") as f:
       f.write(new_path)
