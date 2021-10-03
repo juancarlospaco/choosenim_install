@@ -147,92 +147,35 @@ def choosenim_setup():
   return result
 
 
+def to_path(filename):
+  new_path = "export PATH=" + os.path.join(home, ".nimble", "bin") + ":" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + ":$PATH"
+  filename = os.path.join(home, filename)
+  #try:
+  if filename.exists():
+    found = False
+    with open(filename, "a") as f:
+      for line in f:
+        if new_path == line:
+          found = True
+      if not found:
+        f.write(new_path)
+  else:
+    with open(filename, "w") as f:
+      f.write(new_path)
+      #print("OK\t" + filename)
+    # except:
+    #   print("ER\tFailed to write file: " + filename)
+
+
 def add_to_path():
   # On Linux add Nim to the PATH.
   # Android does not have .bashrc equivalent.
   if not sys.platform.startswith("win"):
-    new_path = "export PATH=" + os.path.join(home, ".nimble", "bin") + ":" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + ":$PATH"
-    filename = os.path.join(home, ".bashrc")
-    try:
-      if filename.exists():
-        found = False
-        with open(filename, "a") as f:
-          for line in f:
-            if new_path == line:
-              found = True
-          if not found:
-            f.write(new_path)
-      else:
-        with open(filename, "w") as f:
-          f.write(new_path)
-      print("OK\t" + filename)
-    except:
-      print("ER\tFailed to write file: " + filename)
-    filename = os.path.join(home, ".profile")
-    try:
-      if filename.exists():
-        found = False
-        with open(filename, "a") as f:
-          for line in f:
-            if new_path == line:
-              found = True
-          if not found:
-            f.write(new_path)
-      else:
-        with open(filename, "w") as f:
-          f.write(new_path)
-      print("OK\t" + filename)
-    except:
-      print("ER\tFailed to write file ~/.profile")
-    filename = os.path.join(home, ".bash_profile")
-    try:
-      if filename.exists():
-        found = False
-        with open(filename, "a") as f:
-          for line in f:
-            if new_path == line:
-              found = True
-          if not found:
-            f.write(new_path)
-      else:
-        with open(filename, "w") as f:
-          f.write(new_path)
-      print("OK\t" + filename)
-    except:
-      print("ER\tFailed to write file ~/.bash_profile")
-    filename = os.path.join(home, ".zshrc")
-    try:
-      if filename.exists():
-        found = False
-        with open(filename, "a") as f:
-          for line in f:
-            if new_path == line:
-              found = True
-          if not found:
-            f.write(new_path)
-      else:
-        with open(filename, "w") as f:
-          f.write(new_path)
-      print("OK\t" + filename)
-    except:
-      print("ER\tFailed to write file ~/.zshrc")
-    # https://github.com/juancarlospaco/choosenim_install/issues/4
-    filename = os.path.join(home, ".zshenv")
-    try:
-      if filename.exists():
-        found = False
-        with open(filename, "a") as f:
-          for line in f:
-            if new_path == line:
-              found = True
-          if not found:
-            f.write(new_path)
-      else:
-        with open(filename, "w") as f:
-          f.write(new_path)
-      print("OK\t" + filename)
-    except:
-      print("ER\tFailed to write file ~/.zshenv")
+    to_path(".bashrc")
+    to_path(".profile")
+    to_path(".bash_profile")
+    to_path(".zshrc")
+    to_path(".zshenv")
     # if subprocess.call(new_path, shell=True, timeout=99) == 0:
     #   print("OK\tAdded to PATH: " + new_path)
     # else:
