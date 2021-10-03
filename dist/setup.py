@@ -51,8 +51,6 @@ def prepare_folders():
     os.path.join(home, ".choosenim", "downloads"),
     os.path.join(home, ".choosenim", "toolchains"),
   ]
-  if sys.platform.startswith("darwin"):
-    folders2create.append(os.path.join(home, "bin"))
   for folder in folders2create:
     if not os.path.exists(folder):  # Older Python do not have exists_ok
       print("OK\tCreate folder: " + folder)
@@ -196,7 +194,7 @@ def nimble_setup():
         print("ER\tNim not found, tried 'nim' and " + nim_exe)
   if os.path.exists(nimble_exe):
     new_path = "PATH=" + os.path.join(home, ".nimble", "bin") + ":$PATH"
-    nimble_cmd = nimble_exe + " --accept --noColor --noSSLCheck " # + nim_exe
+    nimble_cmd = nimble_exe + " --accept --noColor --noSSLCheck --nim=" + nim_exe
     if subprocess.call(nimble_cmd + " refresh", shell=True, timeout=999) == 0:
       print("OK\t" + nimble_cmd + " --verbose refresh")
       if subprocess.call(nimble_cmd + " --tarballs install cpython", shell=True, timeout=999) == 0:
