@@ -42,10 +42,8 @@ def which(cmd, mode = os.F_OK | os.X_OK, path = None):
 def prepare_folders():
   folders2create = [
     os.path.join(home, ".local"),
-    os.path.join(home, ".local", "bin"),
     os.path.join(home, ".nimble"),
     os.path.join(home, ".nimble", "pkgs"),
-    os.path.join(home, ".nimble", "bin"),
     os.path.join(home, ".choosenim"),
     os.path.join(home, ".choosenim", "channels"),
     os.path.join(home, ".choosenim", "downloads"),
