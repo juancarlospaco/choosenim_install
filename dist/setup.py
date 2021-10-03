@@ -217,7 +217,7 @@ def nimble_setup():
 
 
 def postinstall():
-  shutil.rmtree(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "docs"), ignore_errors=True)
+  shutil.rmtree(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "doc"), ignore_errors=True)
   shutil.rmtree(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "tests"), ignore_errors=True)
   shutil.rmtree(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "nimpretty", "tests"), ignore_errors=True)
   shutil.rmtree(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "testament", "tests"), ignore_errors=True)
