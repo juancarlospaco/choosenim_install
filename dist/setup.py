@@ -151,7 +151,7 @@ def to_path(filename):
   new_path = "export PATH=" + os.path.join(home, ".nimble", "bin") + ":" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + ":$PATH"
   filename = os.path.join(home, filename)
   #try:
-  if os.path.exists(filename) and os.path.isfile(filename):
+  if os.path.exists(filename) and os.path.isfile(filename) and os.access(filename, os.R_OK | os.W_OK):
     found = False
     with open(filename, "a") as f:
       for line in f:
