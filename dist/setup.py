@@ -79,11 +79,12 @@ def get_link():
 
 
 def copy_folders(src, dst):
-  try:
-    shutil.copytree(src, dst)
-    print("OK\tCopying: " + src + " into " + dst)
-  except:
-    print("ER\tFailed to copy folder: " + src + " into " + dst)
+  #try:
+  print("OK\tCopying: " + src + " into " + dst)
+  shutil.copytree(src, dst)
+
+  #except:
+  #  print("ER\tFailed to copy folder: " + src + " into " + dst)
 
 
 def nim_setup():
