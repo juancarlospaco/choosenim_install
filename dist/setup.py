@@ -78,6 +78,14 @@ def get_link():
   return result
 
 
+def copy_folders(src, dst):
+  try:
+    shutil.copytree(src, dst)
+    print("OK\tCopying: " + src + " into " + dst)
+  except:
+    print("ER\tFailed to copy folder: " + src + " into " + dst)
+
+
 def nim_setup():
   # Basically this does the same as choosenim, but in pure Python,
   # so we dont need to "bundle" several choosenim EXEs, bash, etc.
@@ -95,32 +103,9 @@ def nim_setup():
         os.path.join(home, ".choosenim", "toolchains", folder),
         os.path.join(home, ".choosenim", "toolchains", "nim-#devel"))
       break
-  try:
-    print("OK\tCopying: " + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + " into " + os.path.join(home, ".nimble", "bin"))
-    shutil.copytree(
-      os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin"),
-      os.path.join(home, ".nimble", "bin"))
-    shutil.copytree(  # I dunno why Nimble wants this sometimes.
-      os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "lib"),
-      os.path.join(home, ".nimble", "lib"))
-
-    if sys.platform.startswith("linux"):
-      print("OK\tCopying: " + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + " into " + os.path.join(home, ".local", "bin"))
-      shutil.copytree(
-        os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin"),
-        os.path.join(home, ".local", "bin"))
-    elif sys.platform.startswith("darwin"):
-      print("OK\tCopying: " + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + " into " + os.path.join(home, "bin"))
-      shutil.copytree(
-        os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin"),
-        os.path.join(home, "bin"))
-
-    shutil.copytree(
-      os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin"),
-      os.path.join(home, ".nimble", "lib"))
-
-  except:
-    print("ER\tFailed to copy binaries into folder: " + os.path.join(home, ".nimble", "bin"))
+  copy_folders(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin"), os.path.join(home, ".nimble", "bin"))
+  copy_folders(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "lib"), os.path.join(home, ".nimble", "lib"))
+  copy_folders(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin"), os.path.join(home, ".local", "bin"))
 
 
 def choosenim_setup():
