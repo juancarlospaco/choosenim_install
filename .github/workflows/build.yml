@@ -32,4 +32,5 @@ jobs:
       shell: bash
       run: |
         echo $PATH
-        ls -LR ~/.choosenim/toolchains/nim-#devel/
+        git --version
+        ls -LR ~/.choosenim/toolchains/
