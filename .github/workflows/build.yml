@@ -22,6 +22,8 @@ jobs:
         pip --no-color --no-python-version-warning --disable-pip-version-check --no-cache-dir --no-input --verbose install dist/
 
     - name: After-Install Test
+      shell: bash
       run: |
+        echo $PATH
         nim --version
         nimble --version
