@@ -8,7 +8,7 @@ jobs:
       fail-fast: false
       matrix:
         platform: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ["3.4", "3.9"]
+        python-version: ["3.6", "3.9"]
     name: ${{ matrix.platform }}
     runs-on: ${{ matrix.platform }}
     steps:
