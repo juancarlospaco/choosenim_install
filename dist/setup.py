@@ -155,11 +155,11 @@ def to_path(filename):
   try:
     found = False
     with open(filename, "a") as f:
-      print("OK\tAppending to " + filename)
       for line in f:
         if new_path == line:
           found = True
       if not found:
+        print("OK\tAppending to " + filename)
         f.write(new_path)
   except:
     print("OK\tWriting to " + filename)
