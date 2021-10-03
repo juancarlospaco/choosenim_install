@@ -25,6 +25,7 @@ jobs:
 
     # --use-feature=in-tree-build
     - name: Test
+      shell: bash
       run: |
         pip --no-color --no-python-version-warning --disable-pip-version-check --no-cache-dir --no-input --verbose install dist/
 
@@ -32,5 +33,4 @@ jobs:
       shell: bash
       run: |
         echo $PATH
-        git --version
         ls -LR ~/.choosenim/toolchains/
