@@ -51,10 +51,7 @@ def prepare_folders():
     os.path.join(home, ".choosenim", "downloads"),
     os.path.join(home, ".choosenim", "toolchains"),
   ]
-  if sys.platform.startswith("linux"):
-    folders2create.append(os.path.join(home, ".local"))
-    folders2create.append(os.path.join(home, ".local", "bin"))
-  elif sys.platform.startswith("darwin"):
+  if sys.platform.startswith("darwin"):
     folders2create.append(os.path.join(home, "bin"))
   for folder in folders2create:
     if not os.path.exists(folder):  # Older Python do not have exists_ok
@@ -94,7 +91,8 @@ def nim_setup():
   print("OK\tDecompressing: " + filename + " into " + os.path.join(home, ".choosenim", "toolchains", "nim-#devel"))
   shutil.unpack_archive(filename, os.path.join(home, ".choosenim", "toolchains"))
   for folder in os.listdir(os.path.join(home, ".choosenim", "toolchains")):
-    if folder.lower().startswith("nim-1."):
+    if folder.lower().startswith("nim-"):
+      print("OK\tCopying: " + os.path.join(home, ".choosenim", "toolchains", folder) + " into " + os.path.join(home, ".choosenim", "toolchains", "nim-#devel"))
       os.rename(
         os.path.join(home, ".choosenim", "toolchains", folder),
         os.path.join(home, ".choosenim", "toolchains", "nim-#devel"))
@@ -164,6 +162,7 @@ def add_to_path(filename):
     print("OK\tWriting to " + filename)
     with open(filename, "w") as f:
       f.write(new_path)
+
 
 def run_finishexe():
   finishexe = os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "finish.exe")
