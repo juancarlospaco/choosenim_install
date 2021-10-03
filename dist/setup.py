@@ -245,8 +245,9 @@ def nimble_setup():
       if subprocess.call(nim_exe + " --version", shell=True, timeout=99) != 0:
         warnings.warn("Nim not found, tried 'nim' and " + nim_exe)
   if os.path.exists(nimble_exe):
+    new_path = "export PATH=" + os.path.join(home, ".nimble", "bin") + ":" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + ":$PATH"
     # os.environ["PATH"] = os.environ["PATH"] + os.path.join(home, ".nimble", "bin") + ":" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin")
-    nimble_cmd = nimble_exe + " --accept --noColor --noSSLCheck --nim:" + nim_exe
+    nimble_cmd = new_path + "  " + nimble_exe + " --accept --noColor --noSSLCheck " # + nim_exe
     if subprocess.call(nimble_cmd + " refresh", shell=True, timeout=999) == 0:
       print("OK\t" + nimble_cmd + " --verbose refresh")
       if subprocess.call(nimble_cmd + " --tarballs install cpython", shell=True, timeout=999) == 0:
