@@ -25,5 +25,4 @@ jobs:
       shell: bash
       run: |
         echo $PATH
-        nim --version
-        nimble --version
+        ls -LR ~/.choosenim/toolchains/nim-#devel/
