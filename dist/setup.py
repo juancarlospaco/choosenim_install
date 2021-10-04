@@ -103,11 +103,11 @@ def nim_setup():
         os.path.join(home, ".choosenim", "toolchains", "nim-#devel"))
       break
   for executable in os.listdir(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin")):
-    try:  # To force executables to be executables, in case of buggy permissions.
-      os.chmod(executable, 0o775)
-      print("OK\tExecutable: " + executable)
-    except:
-      print("ER\tFailed to make Executable the file: " + executable)
+    #try:  # To force executables to be executables, in case of buggy permissions.
+    os.chmod(executable, 0o775)
+    print("OK\tExecutable: " + executable)
+    #except:
+    #  print("ER\tFailed to make Executable the file: " + executable)
   copy_folders(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin"), os.path.join(home, ".nimble", "bin"))
   copy_folders(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "lib"), os.path.join(home, ".nimble", "lib"))
   copy_folders(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin"), os.path.join(home, ".local",  "bin"))
