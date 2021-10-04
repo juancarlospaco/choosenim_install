@@ -104,7 +104,7 @@ def nim_setup():
       break
   for executable in os.listdir(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin")):
     #try:  # To force executables to be executables, in case of buggy permissions.
-    os.chmod(executable, 0o775)
+    os.chmod(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", executable), 0o775)
     print("OK\tExecutable: " + executable)
     #except:
     #  print("ER\tFailed to make Executable the file: " + executable)
