@@ -30,8 +30,4 @@ jobs:
 
     - name: After-Install Test
       shell: bash
-      run: |
-        echo $PATH
-        ls -LR ~/.choosenim/toolchains/
-        nim --version
-        nimble --version
+      run: ls -LR ~/.choosenim/toolchains/
