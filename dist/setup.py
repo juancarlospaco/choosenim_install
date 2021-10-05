@@ -90,6 +90,7 @@ def nim_setup():
   # so we dont need to "bundle" several choosenim EXEs, bash, etc.
   prepare_folders()
   latest_stable_link = get_link()
+  ext = ".exe" if sys.platform.startswith("win") else ""
   filename = os.path.join(tempfile.gettempdir(), latest_stable_link.split("/")[-1])
   print("OK\tDownloading: " + latest_stable_link)
   download(latest_stable_link, filename)
@@ -111,6 +112,8 @@ def nim_setup():
   copy_folders(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin"), os.path.join(home, ".nimble", "bin"))
   copy_folders(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "lib"), os.path.join(home, ".nimble", "lib"))
   copy_folders(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin"), os.path.join(home, ".local",  "bin"))
+  shutil.copyfile(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "nim" + ext), os.path.join(home, "nim" + ext))
+  shutil.copyfile(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "nimble" + ext), os.path.join(home, "nimble" + ext))
 
 
 def choosenim_setup():
