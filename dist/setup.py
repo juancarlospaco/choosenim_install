@@ -1,14 +1,12 @@
 import os, sys, setuptools, subprocess, shutil, platform, urllib, tempfile, ssl, json
 from setuptools.command.install import install
 
-
 assert platform.python_implementation() == "CPython", "ERROR: Python implementation must be CPython!."
 assert sys.version_info > (3, 0, 0), "ERROR: Python version must be > 3.0!."
 home = os.path.expanduser("~")
 contexto = ssl.create_default_context()
 contexto.check_hostname = False
 contexto.verify_mode = ssl.CERT_NONE # Ignore SSL Errors and Warnings if any.
-
 
 def which(cmd, mode = os.F_OK | os.X_OK, path = None):
   # shutil.which is Python 3.3+ only.
@@ -38,7 +36,6 @@ def which(cmd, mode = os.F_OK | os.X_OK, path = None):
   print("ER\tshutil.which can not find executable " + cmd)
   return cmd
 
-
 def prepare_folders():
   folders2create = [
     os.path.join(home, ".local"),
@@ -47,8 +44,12 @@ def prepare_folders():
     os.path.join(home, ".choosenim"),
     os.path.join(home, ".choosenim", "channels"),
     os.path.join(home, ".choosenim", "downloads"),
-    os.path.join(home, ".choosenim", "toolchains"),
+    os.path.join(home, ".choosenim", "toolchains")
   ]
+
+  if not sys.platform.startswith("win"):
+    folders2create = folders2create + [os.path.join("/usr", "bin", ".nimble"), os.path.join("/usr", "lib", "nim"),os.path.join("/usr", "lib", "nim", "lib")]
+
   for folder in folders2create:
     if not os.path.exists(folder):  # Older Python do not have exists_ok
       print("OK\tCreate folder: " + folder)
@@ -56,17 +57,18 @@ def prepare_folders():
     else:
       print("ER\tFolder already exists: " + folder)
 
-
 def download(url, path):
   with urllib.request.urlopen(url, context=contexto) as response:
     with open(path, 'wb') as outfile:
       shutil.copyfileobj(response, outfile)
 
-
 def get_link():
   arch = 32 if not platform.machine().endswith("64") else 64  # https://stackoverflow.com/a/12578715
   result = None
-  if sys.platform.startswith("linux"):
+  if platform.machine().startswith("armv"):
+    arch = arch if arch == 64 else "v7l"
+    result = "https://github.com/nim-lang/nightlies/releases/download/latest-devel/linux_arm{}.tar.xz".format(arch)
+  elif sys.platform.startswith("linux"):
     result = "https://github.com/nim-lang/nightlies/releases/download/latest-devel/linux_x{}.tar.xz".format(arch)
   elif sys.platform.startswith("win"):
     result = "https://github.com/nim-lang/nightlies/releases/download/latest-devel/windows_x{}.zip".format(arch)
@@ -78,12 +80,35 @@ def get_link():
 
 def copy_folders(src, dst):
   try:
+#    shutil.copytree(src, dst, dirs_exist_ok=True)
     shutil.copytree(src, dst)
   except:
     print("ER\tFailed to copy folder: " + src + " into " + dst)
   else:
     print("OK\tCopying: " + src + " into " + dst)
 
+def backup_nim_version(src):
+  #Backup the current version
+  bsrc = None
+  dest = None
+
+  if "usr" not in src:
+     if os.path.exists(os.path.join(home,src)):
+       shutil.rmtree(os.path.join(home,src))
+     else:
+       os.mkdir(src)
+     bsrc = os.path.join(home,".nimble")
+     dest = os.path.join(home,src)
+  else:
+     if os.path.exists(os.path.join(src)):
+       shutil.rmtree(os.path.join(src))
+     else:
+       os.mkdir(src)
+
+     bsrc = os.path.join("/usr", "bin", ".nimble") if "bin" in src else os.path.join("/usr", "lib", "nim")
+     dest = os.path.join(src)
+
+  os.rename(bsrc,dest)
 
 def nim_setup():
   # Basically this does the same as choosenim, but in pure Python,
@@ -103,18 +128,38 @@ def nim_setup():
         os.path.join(home, ".choosenim", "toolchains", folder),
         os.path.join(home, ".choosenim", "toolchains", "nim-#devel"))
       break
+
   for executable in os.listdir(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin")):
     try:  # To force executables to be executables, in case of buggy permissions, happened in the past.
       os.chmod(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", executable), 0o775)
       print("OK\tNew binary executable: " + executable)
     except:
       print("ER\tFailed to chmod: " + executable)
-  copy_folders(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin"), os.path.join(home, ".nimble", "bin"))
-  copy_folders(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "lib"), os.path.join(home, ".nimble", "lib"))
-  copy_folders(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin"), os.path.join(home, ".local",  "bin"))
-  shutil.copyfile(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "nim" + ext), os.path.join(home, "nim" + ext))
-  shutil.copyfile(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "nimble" + ext), os.path.join(home, "nimble" + ext))
 
+  backup_nim_version(os.path.join(home,".nimble_backup"))
+
+  #All folders are stored in the same location for every os
+  copy_folders(os.path.join(home, ".choosenim", "toolchains", "nim-#devel"), os.path.join(home, ".nimble"))
+
+  if not sys.platform.startswith("win"):
+    shutil.copyfile(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "nim" + ext), os.path.join(home, "nim" + ext))
+    shutil.copyfile(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "nimble" + ext), os.path.join(home, "nimble" + ext))
+
+    backup_nim_version(os.path.join("/usr", "bin", ".nimble_backup"))
+    backup_nim_version(os.path.join("/usr", "lib", "nim_backup"))
+
+    copy_folders(os.path.join(home, ".nimble", "bin"), os.path.join("/usr", "bin", ".nimble", "bin"))
+
+    copy_folders(os.path.join(home, ".nimble", "lib"), os.path.join("/usr", "lib", "nim"))
+
+    shutil.copyfile(os.path.join(home, ".nimble", "bin", "nim" + ext), os.path.join("/usr", "bin", "nim" + ext))
+    shutil.copyfile(os.path.join(home, ".nimble", "bin", "nimble" + ext), os.path.join("/usr", "bin", "nimble" + ext))
+
+    os.chmod(os.path.join("/usr", "bin", ".nimble", "bin"), 0o775)
+    os.chmod(os.path.join("/usr", "lib", "nim"), 0o775)
+
+    os.chmod(os.path.join("/usr", "bin", "nim" + ext), 0o775)
+    os.chmod(os.path.join("/usr", "bin", "nimble" + ext), 0o775)
 
 def choosenim_setup():
   # We have to check if the user has choosenim already working.
@@ -154,9 +199,23 @@ def add_to_path(filename):
     with open(filename, "w") as f:
       f.write(new_path)
 
-
 def run_finishexe():
+  # Just for setting required directories in front of %PATH% environment variable
+  # before finish.exe download a compatible compiler
+
+  # Add new nim binaries and libs to path
+  required_dirs = '{};{}'.format(os.path.join(home, ".nimble", "bin"),os.path.join(home, ".nimble", "lib"))
+  for p in os.environ['PATH'].split(';'):
+    #Git is required for downloading nimble packages
+    #Python probably got lost after setting the path, so we added them here
+    if "Git" in p or "Python" in p:
+      required_dirs = required_dirs + ';' + p
+  required_dirs = required_dirs + ';' + '%path%'
+  #persists this values in path
+  os.system("setx path \"{}\"".format(required_dirs))
+
   finishexe = os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "finish.exe")
+  os.system("mkdir dist")
   if os.path.exists(finishexe):
     if subprocess.call(finishexe + " -y", shell=True) != 0:
       print("ER\tFailed to run: " + finishexe)
@@ -165,11 +224,11 @@ def run_finishexe():
   else:
     print("ER\tFile not found: " + finishexe)
 
-
 def nimble_setup():
   # After choosenim, we check that Nimble is working,
   # as "nimble" or "~/.nimble/bin/nimble", then install nimpy and fusion
   result = False
+  installed_packages = 0
   ext = ".exe" if sys.platform.startswith("win") else ""
   nimble_exe = os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "nimble" + ext)
   if subprocess.call(nimble_exe + " --version", shell=True, timeout=99) != 0:
@@ -187,27 +246,32 @@ def nimble_setup():
         print("ER\tNim not found, tried 'nim' and " + nim_exe)
   if os.path.exists(nimble_exe):
     new_path = "PATH=" + os.path.join(home, ".nimble", "bin") + ":$PATH"
+    nim_exe = os.path.join(home, ".nimble", "bin","nim")
     nimble_cmd = nimble_exe + " --accept --noColor --noSSLCheck --nim=" + nim_exe
     if subprocess.call(nimble_cmd + " refresh", shell=True, timeout=999) == 0:
       print("OK\t" + nimble_cmd + " --verbose refresh")
       if subprocess.call(nimble_cmd + " --tarballs install cpython", shell=True, timeout=999) == 0:
         print("OK\t" + nimble_cmd + " --tarballs install cpython")
+        installed_packages += 1
       else:
         print("ER\tFailed to run '" + nimble_cmd + " --tarballs install cpython'")
       if subprocess.call(nimble_cmd + " --tarballs install nodejs", shell=True, timeout=999) == 0:
         print("OK\t" + nimble_cmd + " --tarballs install nodejs")
+        installed_packages += 1
       else:
         print("ER\tFailed to run '" + nimble_cmd + " --tarballs install nodejs'")
       if subprocess.call(nimble_cmd + " --tarballs install fusion", shell=True, timeout=999) == 0:
         print("OK\t" + nimble_cmd + " --tarballs install fusion")
+        installed_packages += 1
       else:
         print("ER\tFailed to run '" + nimble_cmd + " --tarballs install fusion'")
     else:
       print("ER\tFailed to run '" + nimble_cmd + " refresh'")
   else:
     print("ER\tFile not found " + nimble_exe)
+  if installed_packages == 3:
+      result = True
   return result
-
 
 def postinstall():
   shutil.rmtree(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "doc"), ignore_errors=True)
@@ -218,11 +282,10 @@ def postinstall():
   shutil.rmtree(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "tools", "atlas", "tests"), ignore_errors=True)
   shutil.rmtree(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "dist", "nimble", "tests"), ignore_errors=True)
 
-
 class X(install):
 
   def run(self):
-    install.run(self)      # This is required by Python.
+    install.run(self)    # This is required by Python.
     if choosenim_setup():  # Check if choosenim is already installed.
       nim_setup()                   # Install Nim.
       if not sys.platform.startswith("win"):
@@ -239,10 +302,15 @@ class X(install):
     else:
       raise Exception(IOError, "Failed to install Nim")
 
-setuptools.setup(
-  name         = "choosenim_install",
-  author       = "Juan_Carlos.nim",
-  cmdclass     = {"install": X},
-  author_email = "UNKNOWN",
-  url          = "UNKNOWN",
-)
+
+try:
+  setuptools.setup(
+    name         = "choosenim_install",
+    author       = "Juan_Carlos.nim",
+    cmdclass     = {"install": X},
+    author_email = "UNKNOWN",
+    url          = "UNKNOWN",
+  )
+except Exception as e:
+   print("Please re-run as admin.")
+   print(e)
