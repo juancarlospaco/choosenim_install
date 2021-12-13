@@ -33,3 +33,4 @@ jobs:
       run: |
         nim --version
         nimble --version
+        nimble list --installed
