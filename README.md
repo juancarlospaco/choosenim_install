@@ -42,8 +42,13 @@ $
 
 # Requisites
 
-- Python >= `3.5`, CPython implementation, 32Bit or 64Bit, Linux or Windows.
-- ARM is supported. Mac is Experimental. PYPY2 and PYPY3 is Experimental. Python2 is not supported.
+#### Stable
+
+- Python >=`3.5`, CPython implementation, Linux or Windows, x86 and ARM, 64Bit.
+
+#### Experimental
+
+- Mac, PYPY2, PYPY3, Python2, 32Bit are all Experimental.
 
 
 # History
