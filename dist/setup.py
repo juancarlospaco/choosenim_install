@@ -211,6 +211,10 @@ def run_finishexe():
   required_dirs = required_dirs + ';' + '%path%'
   #persists this values in path
   os.system("setx path \"{}\"".format(required_dirs))
+  
+  #testing after setting the path
+  os.system("nim -v")
+  os.system("nimble -v")
 
   #finishexe = os.path.join(home, ".nimble", "finish.exe")
   #os.system("mkdir dist")
