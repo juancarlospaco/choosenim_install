@@ -30,4 +30,6 @@ jobs:
 
     - name: After-Install Test
       shell: bash
-      run: ls -LR ~/.choosenim/
+      run: |
+        nim --version
+        nimble --version
