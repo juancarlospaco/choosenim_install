@@ -23,8 +23,16 @@ jobs:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 
     # --use-feature=in-tree-build
-    - name: Test (Linux/Mac)
-      if: runner.os == 'Linux' || runner.os == 'macOS'
+    - name: Test (Linux)
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        sudo pip --no-color --no-python-version-warning --disable-pip-version-check --no-cache-dir --no-input --verbose install dist/
+
+    # Dev team does NOT have Mac.
+    - name: Test (Mac)
+      if: runner.os == 'macOS'
+      continue-on-error: true
       shell: bash
       run: |
         sudo pip --no-color --no-python-version-warning --disable-pip-version-check --no-cache-dir --no-input --verbose install dist/
