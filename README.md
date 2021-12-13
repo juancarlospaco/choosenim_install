@@ -42,13 +42,14 @@ $
 
 # Requisites
 
-- Python >`3.0`, CPython implementation.
+- Python >= `3.5`, CPython implementation, 32Bit or 64Bit, Linux or Windows.
+- ARM is supported. Mac is Experimental. PYPY2 and PYPY3 is Experimental. Python2 is not supported.
 
 
 # History
 
 Originally this used multiple bundled `choosenim` to install Nim,
-now it re-implements `choosenim` functionalities in pure Python 3.0+.
+now it re-implements `choosenim` functionalities in pure Python.
 
 
 # More Info
