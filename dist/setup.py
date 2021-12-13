@@ -91,7 +91,8 @@ def backup_nim_version(src):
   #Backup the current version
   bsrc = None
   dest = None
-
+  print("backing up current version.")
+  print("src: ", src)
   if "usr" not in src:
      if os.path.exists(os.path.join(home,src)):
        shutil.rmtree(os.path.join(home,src))
@@ -107,7 +108,9 @@ def backup_nim_version(src):
 
      bsrc = os.path.join("/usr", "bin", ".nimble") if "bin" in src else os.path.join("/usr", "lib", "nim")
      dest = os.path.join(src)
-
+  
+  print("src: ", bsrc)
+  print("dest: ", dest)
   os.rename(bsrc,dest)
 
 def nim_setup():
