@@ -23,10 +23,17 @@ jobs:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 
     # --use-feature=in-tree-build
-    - name: Test
+    - name: Test (Linux/Mac)
+      if: runner.os == 'Linux' || runner.os == 'macOS'
       shell: bash
       run: |
         sudo pip --no-color --no-python-version-warning --disable-pip-version-check --no-cache-dir --no-input --verbose install dist/
+
+    - name: Test (Windows)
+      if: runner.os == 'Windows'
+      shell: bash
+      run: |
+        pip --no-color --no-python-version-warning --disable-pip-version-check --no-cache-dir --no-input --verbose install dist/
 
     - name: After-Install Test
       shell: bash
