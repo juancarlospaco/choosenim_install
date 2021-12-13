@@ -90,24 +90,19 @@ def copy_folders(src, dst):
 def backup_nim_version(src):
   #Backup the current version
   bsrc = None
-  dest = None
-  print("backing up current version.")
-  print("src: ", src)
-  if "usr" not in src:
-     if os.path.exists(os.path.join(home,src)):
-       shutil.rmtree(os.path.join(home,src))
-     else:
-       os.mkdir(src)
-     bsrc = os.path.join(home,".nimble")
-     dest = os.path.join(home,src)
+  dest = src
+  
+  if os.path.exists(src):
+    print("Deleting backup folder: ", src)
+    shutil.rmtree(src)
   else:
-     if os.path.exists(os.path.join(src)):
-       shutil.rmtree(os.path.join(src))
-     else:
-       os.mkdir(src)
-
-     bsrc = os.path.join("/usr", "bin", ".nimble") if "bin" in src else os.path.join("/usr", "lib", "nim")
-     dest = os.path.join(src)
+    print("Creating backup folder: ", src)
+    os.mkdir(src)
+    
+  if "usr" not in src:
+    bsrc = os.path.join(home,".nimble")
+  else:
+    bsrc = os.path.join("/usr", "bin", ".nimble") if "bin" in src else os.path.join("/usr", "lib", "nim")
   
   print("src: ", bsrc)
   print("dest: ", dest)
