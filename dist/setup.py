@@ -91,7 +91,10 @@ def backup_nim_version(src):
   #Backup the current version
   bsrc = None
   dest = src
-  
+
+  print(".nimble: ",os.path.exists(os.path.join(home,".nimble")))
+  print(".nimble_backup: ",os.path.exists(os.path.join(home,".nimble_backup")))
+
   if os.path.exists(src):
     print("Deleting backup folder: ", src)
     shutil.rmtree(src)
@@ -134,8 +137,7 @@ def nim_setup():
     except:
       print("ER\tFailed to chmod: " + executable)
 
-  if not sys.platform.startswith("win"):
-    backup_nim_version(os.path.join(home,".nimble_backup"))
+  backup_nim_version(os.path.join(home,".nimble_backup"))
 
   #All folders are stored in the same location for every os
   copy_folders(os.path.join(home, ".choosenim", "toolchains", "nim-#devel"), os.path.join(home, ".nimble"))
@@ -182,7 +184,6 @@ def choosenim_setup():
     result = True
   return result
 
-
 def add_to_path(filename):
   new_path = "export PATH=" + os.path.join(home, ".nimble", "bin") + ":" + os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin") + ":$PATH"
   filename = os.path.join(home, filename)
@@ -215,13 +216,6 @@ def run_finishexe():
   #persists this values in path
   os.system("setx path \"{}\"".format(required_dirs))
 
-  os.system("path")
-
-  nimble_exe = os.path.join(home, ".nimble", "bin", "nimble.exe")
-  nim_exe = os.path.join(home, ".nimble", "bin", "nim.exe")
-
-  os.system("nim -v")
-  os.system("nimble -v")
   #finishexe = os.path.join(home, ".nimble", "finish.exe")
   #os.system("mkdir dist")
   #if os.path.exists(finishexe):
@@ -309,7 +303,6 @@ class X(install):
       postinstall()
     else:
       raise Exception(IOError, "Failed to install Nim")
-
 
 try:
   setuptools.setup(
