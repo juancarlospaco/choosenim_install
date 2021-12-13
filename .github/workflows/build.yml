@@ -26,7 +26,7 @@ jobs:
     - name: Test
       shell: bash
       run: |
-        pip --no-color --no-python-version-warning --disable-pip-version-check --no-cache-dir --no-input --verbose install dist/
+        sudo pip --no-color --no-python-version-warning --disable-pip-version-check --no-cache-dir --no-input --verbose install dist/
 
     - name: After-Install Test
       shell: bash
