@@ -92,23 +92,19 @@ def backup_nim_version(src):
   bsrc = None
   dest = src
 
-  print(".nimble: ",os.path.exists(os.path.join(home,".nimble")))
-  print(".nimble_backup: ",os.path.exists(os.path.join(home,".nimble_backup")))
-
   if os.path.exists(src):
     print("Deleting backup folder: ", src)
     shutil.rmtree(src)
-  else:
-    print("Creating backup folder: ", src)
-    os.mkdir(src)
+  #else:
+  #  if not sys.platform.startswith("win"):
+  #    print("Creating backup folder: ", src)
+  #    os.mkdir(src)
     
   if "usr" not in src:
     bsrc = os.path.join(home,".nimble")
   else:
     bsrc = os.path.join("/usr", "bin", ".nimble") if "bin" in src else os.path.join("/usr", "lib", "nim")
   
-  print("src: ", bsrc)
-  print("dest: ", dest)
   os.rename(bsrc,dest)
 
 def nim_setup():
@@ -137,22 +133,22 @@ def nim_setup():
     except:
       print("ER\tFailed to chmod: " + executable)
 
-  #backup_nim_version(os.path.join(home,".nimble_backup"))
+  backup_nim_version(os.path.join(home,".nimble_backup"))
 
   #All folders are stored in the same location for every os
-  copy_folders(os.path.join(home, ".choosenim", "toolchains", "nim-#devel"), os.path.join(home, ".nimble"))
+  #copy_folders(os.path.join(home, ".choosenim", "toolchains", "nim-#devel"), os.path.join(home, ".nimble"))
+  os.rename(os.path.join(home, ".choosenim", "toolchains", "nim-#devel"), os.path.join(home, ".nimble"))
 
-  if not sys.platform.startswith("win"):
-  #  backup_nim_version(os.path.join(home,".nimble_backup"))
-    
-    shutil.copyfile(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "nim" + ext), os.path.join(home, "nim" + ext))
-    shutil.copyfile(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "nimble" + ext), os.path.join(home, "nimble" + ext))
+  if not sys.platform.startswith("win"):    
+    #shutil.copyfile(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "nim" + ext), os.path.join(home, "nim" + ext))
+    #shutil.copyfile(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "nimble" + ext), os.path.join(home, "nimble" + ext))
+    shutil.copyfile(os.path.join(home, ".nimble", "bin", "nim" + ext), os.path.join(home, "nim" + ext))
+    shutil.copyfile(os.path.join(home, ".nimble", "bin", "nimble" + ext), os.path.join(home, "nimble" + ext))
 
     backup_nim_version(os.path.join("/usr", "bin", ".nimble_backup"))
     backup_nim_version(os.path.join("/usr", "lib", "nim_backup"))
 
     copy_folders(os.path.join(home, ".nimble", "bin"), os.path.join("/usr", "bin", ".nimble", "bin"))
-
     copy_folders(os.path.join(home, ".nimble", "lib"), os.path.join("/usr", "lib", "nim"))
 
     shutil.copyfile(os.path.join(home, ".nimble", "bin", "nim" + ext), os.path.join("/usr", "bin", "nim" + ext))
@@ -232,14 +228,14 @@ def nimble_setup():
   result = False
   installed_packages = 0
   ext = ".exe" if sys.platform.startswith("win") else ""
-  nimble_exe = os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "nimble" + ext)
+  nimble_exe = os.path.join(home, "nimble" + ext)
   if subprocess.call(nimble_exe + " --version", shell=True, timeout=99) != 0:
     nimble_exe = os.path.join(home, '.nimble', 'bin', "nimble" + ext)  # Try full path to "nimble"
     if subprocess.call(nimble_exe + " --version", shell=True, timeout=99) != 0:
       nimble_exe = "nimble"
       if subprocess.call(nimble_exe + " --version", shell=True, timeout=99) != 0:
         print("ER\tNim not found, tried 'nimble' and " + nimble_exe)
-  nim_exe = os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "nim" + ext)
+  nim_exe = os.path.join(home, "nim" + ext)
   if subprocess.call(nim_exe + " --version", shell=True, timeout=99) != 0:
     nim_exe = os.path.join(home, '.nimble', 'bin', "nim" + ext)  # Try full path to "nim"
     if subprocess.call(nim_exe + " --version", shell=True, timeout=99) != 0:
