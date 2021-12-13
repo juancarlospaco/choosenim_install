@@ -134,13 +134,13 @@ def nim_setup():
     except:
       print("ER\tFailed to chmod: " + executable)
 
-  #backup_nim_version(os.path.join(home,".nimble_backup"))
+  backup_nim_version(os.path.join(home,".nimble_backup"))
 
   #All folders are stored in the same location for every os
   copy_folders(os.path.join(home, ".choosenim", "toolchains", "nim-#devel"), os.path.join(home, ".nimble"))
 
   if not sys.platform.startswith("win"):
-    backup_nim_version(os.path.join(home,".nimble_backup"))
+  #  backup_nim_version(os.path.join(home,".nimble_backup"))
     
     shutil.copyfile(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "nim" + ext), os.path.join(home, "nim" + ext))
     shutil.copyfile(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "nimble" + ext), os.path.join(home, "nimble" + ext))
