@@ -215,15 +215,22 @@ def run_finishexe():
   #persists this values in path
   os.system("setx path \"{}\"".format(required_dirs))
 
-  finishexe = os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "finish.exe")
-  os.system("mkdir dist")
-  if os.path.exists(finishexe):
-    if subprocess.call(finishexe + " -y", shell=True) != 0:
-      print("ER\tFailed to run: " + finishexe)
-    else:
-      print("ER\tReboot to finish installation!")
-  else:
-    print("ER\tFile not found: " + finishexe)
+  os.system("path")
+
+  nimble_exe = os.path.join(home, ".nimble", "bin", "nimble.exe")
+  nim_exe = os.path.join(home, ".nimble", "bin", "nim.exe")
+
+  os.system("nim -v")
+  os.system("nimble -v")
+  #finishexe = os.path.join(home, ".nimble", "finish.exe")
+  #os.system("mkdir dist")
+  #if os.path.exists(finishexe):
+  #  if subprocess.call(finishexe + " -y", shell=True) != 0:
+  #    print("ER\tFailed to run: " + finishexe)
+  #  else:
+  #    print("ER\tReboot to finish installation!")
+  #else:
+  #  print("ER\tFile not found: " + finishexe)
 
 def nimble_setup():
   # After choosenim, we check that Nimble is working,
