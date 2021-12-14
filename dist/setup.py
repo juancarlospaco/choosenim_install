@@ -111,9 +111,8 @@ def nim_setup():
   ext = ".exe" if sys.platform.startswith("win") else ""
   filename = os.path.join(tempfile.gettempdir(), latest_stable_link.split("/")[-1])
   
-  if 1==2:
-    print("OK\tDownloading: " + latest_stable_link)
-    download(latest_stable_link, filename)
+  print("OK\tDownloading: " + latest_stable_link)
+  download(latest_stable_link, filename)
   print("OK\tDecompressing: " + filename + " into " + os.path.join(home, ".choosenim", "toolchains", "nim-#devel"))
   shutil.unpack_archive(filename, os.path.join(home, ".choosenim", "toolchains"))
   for folder in os.listdir(os.path.join(home, ".choosenim", "toolchains")):
