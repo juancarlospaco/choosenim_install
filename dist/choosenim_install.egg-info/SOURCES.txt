@@ -1,0 +1,7 @@
+setup.cfg
+setup.py
+choosenim_install.egg-info/PKG-INFO
+choosenim_install.egg-info/SOURCES.txt
+choosenim_install.egg-info/dependency_links.txt
+choosenim_install.egg-info/top_level.txt
+choosenim_install.egg-info/zip-safe

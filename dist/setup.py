@@ -219,15 +219,16 @@ def run_finishexe():
   #else:
   #  print("ER\tFile not found: " + finishexe)
 
-def install_nimble_packages(nimble_exe):
+def install_nimble_packages(nimble_exe, nim_exe=""):
   packages = ["cpython","nodejs","fusion"]
   installed_packages = 0
 
   nimble_cmd = nimble_exe + " --accept --noColor --noSSLCheck"
-
+  
   if subprocess.call(nimble_cmd + " refresh", shell=True, timeout=999) == 0:
     print("OK\t" + nimble_cmd + " --verbose refresh")
     for package in packages:
+      
       if subprocess.call(nimble_cmd + " --tarballs install " + package, shell=True, timeout=999) == 0:
         print("OK\t" + nimble_cmd + " --tarballs install " + package)
         installed_packages += 1
@@ -240,18 +241,22 @@ def nimble_setup():
   # After choosenim, we check that Nimble is working,
   # as "nimble" or "~/.nimble/bin/nimble", then install nimpy and fusion
   result = False
-  installed_packages = 0
   ext = ".exe" if sys.platform.startswith("win") else ""
 
   # nim and nimble are already in the path, so... let's use them ;)
   nimble_exe = os.path.join("nimble"+ext)
   nim_exe = os.path.join("nim"+ext)
+
   nim_ok = subprocess.call(nim_exe + " --version", shell=True, timeout=99)
   nimble_ok = subprocess.call(nimble_exe + " --version", shell=True, timeout=99)
 
-  if nim_ok == nimble_ok:
+
+  if nim_ok - nimble_ok == 0:
     if install_nimble_packages(nimble_exe) == 3:
       result = True
+  else:
+    nimble_exe = os.path.join(home, '.nimble', 'bin', "nimble" + ext)
+    print(subprocess.call(nimble_exe + " --version", shell=True, timeout=99))
   return result    
   
   #nimble_exe = os.path.join(home, "nimble" + ext)
