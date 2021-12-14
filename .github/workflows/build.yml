@@ -43,10 +43,10 @@ jobs:
       shell: bash
       run: |
         pip --no-color --no-python-version-warning --disable-pip-version-check --no-cache-dir --no-input --verbose install dist/
+        echo "$HOME/.nimble/bin" >> $GITHUB_PATH
 
     - name: After-Install Test
       shell: bash
       run: |
-        nim --version
-        nimble --version
-        nimble list --installed
+        nim -v
+        nimble -v

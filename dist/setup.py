@@ -207,28 +207,29 @@ def run_finishexe():
       required_dirs = required_dirs + ';' + p
   required_dirs = required_dirs + ';' + '%path%'
   #persists this values in path
-  os.system("setx path \"{}\"".format(required_dirs))
+  os.system("setx PATH \"{}\"".format(required_dirs))
   
-  #finishexe = os.path.join(home, ".nimble", "finish.exe")
-  #os.system("mkdir dist")
-  #if os.path.exists(finishexe):
-  #  if subprocess.call(finishexe + " -y", shell=True) != 0:
-  #    print("ER\tFailed to run: " + finishexe)
-  #  else:
-  #    print("ER\tReboot to finish installation!")
-  #else:
-  #  print("ER\tFile not found: " + finishexe)
+  finishexe = os.path.join(home, ".nimble", "finish.exe")
+  os.system("mkdir dist")
+  if os.path.exists(finishexe):
+    if subprocess.call(finishexe + " -y", shell=True) != 0:
+      print("ER\tFailed to run: " + finishexe)
+    else:
+      print("ER\tReboot to finish installation!")
+  else:
+    print("ER\tFile not found: " + finishexe)
 
 def install_nimble_packages(nimble_exe, nim_exe=""):
   packages = ["cpython","nodejs","fusion"]
   installed_packages = 0
+  nimble_cmd = None
 
-  nimble_cmd = nimble_exe + " --accept --noColor --noSSLCheck"
-  
+  nimble_cmd =  " --accept --noColor --noSSLCheck" if nim_exe == "" else " --accept --noColor --noSSLCheck --nim=" + nim_exe
+  nimble_cmd = nimble_exe + nimble_cmd
+   
   if subprocess.call(nimble_cmd + " refresh", shell=True, timeout=999) == 0:
     print("OK\t" + nimble_cmd + " --verbose refresh")
     for package in packages:
-      
       if subprocess.call(nimble_cmd + " --tarballs install " + package, shell=True, timeout=999) == 0:
         print("OK\t" + nimble_cmd + " --tarballs install " + package)
         installed_packages += 1
@@ -244,20 +245,16 @@ def nimble_setup():
   ext = ".exe" if sys.platform.startswith("win") else ""
 
   # nim and nimble are already in the path, so... let's use them ;)
-  nimble_exe = os.path.join("nimble"+ext)
-  nim_exe = os.path.join("nim"+ext)
+  nimble_exe = os.path.join(home, ".nimble", "bin", "nimble" + ext) if "GITHUB_ACTIONS" in os.environ else "nimble"+ext
+  nim_exe = os.path.join(home, ".nimble", "bin", "nim" + ext) if "GITHUB_ACTIONS" in os.environ else "nim"+ext
 
   nim_ok = subprocess.call(nim_exe + " --version", shell=True, timeout=999)
   nimble_ok = subprocess.call(nimble_exe + " --version", shell=True, timeout=999)
 
+  if nim_ok + nimble_ok == 0:
+    result = install_nimble_packages(nimble_exe,nim_exe) if "GITHUB_ACTIONS" in os.environ else install_nimble_packages(nimble_exe)
 
-  if nim_ok - nimble_ok == 0:
-    if install_nimble_packages(nimble_exe) == 3:
-      result = True
-  else:
-    nimble_exe = os.path.join(home, '.nimble', 'bin', "nimble" + ext)
-    print(subprocess.call(nimble_exe + " --version", shell=True, timeout=999))
-  return result    
+  return result == 3
   
   #nimble_exe = os.path.join(home, "nimble" + ext)
   #if subprocess.call(nimble_exe + " --version", shell=True, timeout=99) != 0:
