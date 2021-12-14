@@ -247,8 +247,8 @@ def nimble_setup():
   nimble_exe = os.path.join("nimble"+ext)
   nim_exe = os.path.join("nim"+ext)
 
-  nim_ok = subprocess.call(nim_exe + " --version", shell=True, timeout=99)
-  nimble_ok = subprocess.call(nimble_exe + " --version", shell=True, timeout=99)
+  nim_ok = subprocess.call(nim_exe + " --version", shell=True, timeout=999)
+  nimble_ok = subprocess.call(nimble_exe + " --version", shell=True, timeout=999)
 
 
   if nim_ok - nimble_ok == 0:
@@ -256,7 +256,7 @@ def nimble_setup():
       result = True
   else:
     nimble_exe = os.path.join(home, '.nimble', 'bin', "nimble" + ext)
-    print(subprocess.call(nimble_exe + " --version", shell=True, timeout=99))
+    print(subprocess.call(nimble_exe + " --version", shell=True, timeout=999))
   return result    
   
   #nimble_exe = os.path.join(home, "nimble" + ext)
