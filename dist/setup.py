@@ -80,7 +80,6 @@ def get_link():
 
 def copy_folders(src, dst):
   try:
-#    shutil.copytree(src, dst, dirs_exist_ok=True)
     shutil.copytree(src, dst)
   except:
     print("ER\tFailed to copy folder: " + src + " into " + dst)
@@ -95,17 +94,14 @@ def backup_nim_version(src):
   if os.path.exists(src):
     print("Deleting backup folder: ", src)
     shutil.rmtree(src)
-  #else:
-  #  if not sys.platform.startswith("win"):
-  #    print("Creating backup folder: ", src)
-  #    os.mkdir(src)
-    
+
   if "usr" not in src:
     bsrc = os.path.join(home,".nimble")
   else:
     bsrc = os.path.join("/usr", "bin", ".nimble") if "bin" in src else os.path.join("/usr", "lib", "nim")
   
   os.rename(bsrc,dest)
+  os.chmod(dest, 0o775)
 
 def nim_setup():
   # Basically this does the same as choosenim, but in pure Python,
@@ -114,8 +110,10 @@ def nim_setup():
   latest_stable_link = get_link()
   ext = ".exe" if sys.platform.startswith("win") else ""
   filename = os.path.join(tempfile.gettempdir(), latest_stable_link.split("/")[-1])
-  print("OK\tDownloading: " + latest_stable_link)
-  download(latest_stable_link, filename)
+  
+  if 1==2:
+    print("OK\tDownloading: " + latest_stable_link)
+    download(latest_stable_link, filename)
   print("OK\tDecompressing: " + filename + " into " + os.path.join(home, ".choosenim", "toolchains", "nim-#devel"))
   shutil.unpack_archive(filename, os.path.join(home, ".choosenim", "toolchains"))
   for folder in os.listdir(os.path.join(home, ".choosenim", "toolchains")):
@@ -212,10 +210,6 @@ def run_finishexe():
   #persists this values in path
   os.system("setx path \"{}\"".format(required_dirs))
   
-  #testing after setting the path
-  os.system("nim -v")
-  os.system("nimble -v")
-
   #finishexe = os.path.join(home, ".nimble", "finish.exe")
   #os.system("mkdir dist")
   #if os.path.exists(finishexe):
@@ -226,54 +220,83 @@ def run_finishexe():
   #else:
   #  print("ER\tFile not found: " + finishexe)
 
+def install_nimble_packages(nimble_exe):
+  packages = ["cpython","nodejs","fusion"]
+  installed_packages = 0
+
+  nimble_cmd = nimble_exe + " --accept --noColor --noSSLCheck"
+
+  if subprocess.call(nimble_cmd + " refresh", shell=True, timeout=999) == 0:
+    print("OK\t" + nimble_cmd + " --verbose refresh")
+    for package in packages:
+      if subprocess.call(nimble_cmd + " --tarballs install " + package, shell=True, timeout=999) == 0:
+        print("OK\t" + nimble_cmd + " --tarballs install " + package)
+        installed_packages += 1
+      else:
+        print("ER\tFailed to run '" + nimble_cmd + " --tarballs install " + package + "'")  
+
+  return installed_packages
+
 def nimble_setup():
   # After choosenim, we check that Nimble is working,
   # as "nimble" or "~/.nimble/bin/nimble", then install nimpy and fusion
   result = False
   installed_packages = 0
   ext = ".exe" if sys.platform.startswith("win") else ""
-  nimble_exe = os.path.join(home, "nimble" + ext)
-  if subprocess.call(nimble_exe + " --version", shell=True, timeout=99) != 0:
-    nimble_exe = os.path.join(home, '.nimble', 'bin', "nimble" + ext)  # Try full path to "nimble"
-    if subprocess.call(nimble_exe + " --version", shell=True, timeout=99) != 0:
-      nimble_exe = "nimble"
-      if subprocess.call(nimble_exe + " --version", shell=True, timeout=99) != 0:
-        print("ER\tNim not found, tried 'nimble' and " + nimble_exe)
-  nim_exe = os.path.join(home, "nim" + ext)
-  if subprocess.call(nim_exe + " --version", shell=True, timeout=99) != 0:
-    nim_exe = os.path.join(home, '.nimble', 'bin', "nim" + ext)  # Try full path to "nim"
-    if subprocess.call(nim_exe + " --version", shell=True, timeout=99) != 0:
-      nim_exe = "nim"
-      if subprocess.call(nim_exe + " --version", shell=True, timeout=99) != 0:
-        print("ER\tNim not found, tried 'nim' and " + nim_exe)
-  if os.path.exists(nimble_exe):
-    new_path = "PATH=" + os.path.join(home, ".nimble", "bin") + ":$PATH"
-    nim_exe = os.path.join(home, ".nimble", "bin","nim")
-    nimble_cmd = nimble_exe + " --accept --noColor --noSSLCheck --nim=" + nim_exe
-    if subprocess.call(nimble_cmd + " refresh", shell=True, timeout=999) == 0:
-      print("OK\t" + nimble_cmd + " --verbose refresh")
-      if subprocess.call(nimble_cmd + " --tarballs install cpython", shell=True, timeout=999) == 0:
-        print("OK\t" + nimble_cmd + " --tarballs install cpython")
-        installed_packages += 1
-      else:
-        print("ER\tFailed to run '" + nimble_cmd + " --tarballs install cpython'")
-      if subprocess.call(nimble_cmd + " --tarballs install nodejs", shell=True, timeout=999) == 0:
-        print("OK\t" + nimble_cmd + " --tarballs install nodejs")
-        installed_packages += 1
-      else:
-        print("ER\tFailed to run '" + nimble_cmd + " --tarballs install nodejs'")
-      if subprocess.call(nimble_cmd + " --tarballs install fusion", shell=True, timeout=999) == 0:
-        print("OK\t" + nimble_cmd + " --tarballs install fusion")
-        installed_packages += 1
-      else:
-        print("ER\tFailed to run '" + nimble_cmd + " --tarballs install fusion'")
-    else:
-      print("ER\tFailed to run '" + nimble_cmd + " refresh'")
-  else:
-    print("ER\tFile not found " + nimble_exe)
-  if installed_packages == 3:
+
+  # nim and nimble are already in the path, so... let's use them ;)
+  nimble_exe = os.path.join("nimble"+ext)
+  nim_exe = os.path.join("nim"+ext)
+  nim_ok = subprocess.call(nim_exe + " --version", shell=True, timeout=99)
+  nimble_ok = subprocess.call(nimble_exe + " --version", shell=True, timeout=99)
+
+  if nim_ok == nimble_ok:
+    if install_nimble_packages(nimble_exe) == 3:
       result = True
-  return result
+  return result    
+  
+  #nimble_exe = os.path.join(home, "nimble" + ext)
+  #if subprocess.call(nimble_exe + " --version", shell=True, timeout=99) != 0:
+  #  nimble_exe = os.path.join(home, '.nimble', 'bin', "nimble" + ext)  # Try full path to "nimble"
+  #  if subprocess.call(nimble_exe + " --version", shell=True, timeout=99) != 0:
+  #    nimble_exe = "nimble"
+  #    if subprocess.call(nimble_exe + " --version", shell=True, timeout=99) != 0:
+  #      print("ER\tNim not found, tried 'nimble' and " + nimble_exe)
+  #nim_exe = os.path.join(home, "nim" + ext)
+  #if subprocess.call(nim_exe + " --version", shell=True, timeout=99) != 0:
+  #  nim_exe = os.path.join(home, '.nimble', 'bin', "nim" + ext)  # Try full path to "nim"
+  #  if subprocess.call(nim_exe + " --version", shell=True, timeout=99) != 0:
+  #    nim_exe = "nim"
+  #    if subprocess.call(nim_exe + " --version", shell=True, timeout=99) != 0:
+  #      print("ER\tNim not found, tried 'nim' and " + nim_exe)
+  #if os.path.exists(nimble_exe):
+  #  new_path = "PATH=" + os.path.join(home, ".nimble", "bin") + ":$PATH"
+  #  nim_exe = os.path.join(home, ".nimble", "bin","nim")
+  #  nimble_cmd = nimble_exe + " --accept --noColor --noSSLCheck --nim=" + nim_exe
+  #  if subprocess.call(nimble_cmd + " refresh", shell=True, timeout=999) == 0:
+  #    print("OK\t" + nimble_cmd + " --verbose refresh")
+  #    if subprocess.call(nimble_cmd + " --tarballs install cpython", shell=True, timeout=999) == 0:
+  #      print("OK\t" + nimble_cmd + " --tarballs install cpython")
+  #      installed_packages += 1
+  #    else:
+  #      print("ER\tFailed to run '" + nimble_cmd + " --tarballs install cpython'")
+  #    if subprocess.call(nimble_cmd + " --tarballs install nodejs", shell=True, timeout=999) == 0:
+  #      print("OK\t" + nimble_cmd + " --tarballs install nodejs")
+  #      installed_packages += 1
+  #    else:
+  #      print("ER\tFailed to run '" + nimble_cmd + " --tarballs install nodejs'")
+  #    if subprocess.call(nimble_cmd + " --tarballs install fusion", shell=True, timeout=999) == 0:
+  #      print("OK\t" + nimble_cmd + " --tarballs install fusion")
+  #      installed_packages += 1
+  #    else:
+  #      print("ER\tFailed to run '" + nimble_cmd + " --tarballs install fusion'")
+  #  else:
+  #    print("ER\tFailed to run '" + nimble_cmd + " refresh'")
+  #else:
+  #  print("ER\tFile not found " + nimble_exe)
+  #if installed_packages == 3:
+  #    result = True
+  #return result
 
 def postinstall():
   shutil.rmtree(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "doc"), ignore_errors=True)
