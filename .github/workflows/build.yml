@@ -45,16 +45,20 @@ jobs:
         pip --no-color --no-python-version-warning --disable-pip-version-check --no-cache-dir --no-input --verbose install dist/
         echo "$HOME/.nimble/bin" >> $GITHUB_PATH
 
-    - name: After-Install Test
+    - name: After-Install Nim/Nimble Test
       shell: bash
       run: |
         nim -v
         nimble -v
 
-    - name: After-Install PATH Test
+    - name: After-Install StdLib PATH Test
       shell: bash
       run: |
         echo "import std/strutils" > temp.nim
         nim c temp.nim
-        echo "import nimpy, cpython, nodejs" > temp.nim
+
+    - name: After-Install Nimble libs PATH Test
+      shell: bash
+      run: |
+        echo "import cpython/math" > temp.nim
         nim c temp.nim
