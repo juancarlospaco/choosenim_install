@@ -8,7 +8,7 @@ jobs:
       fail-fast: false
       matrix:
         platform: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ["2.7", "3.5", "3.6", "3.7", "3.8", "3.9", "3.10", "pypy2", "pypy3"]
+        python-version: ["3.5", "3.6", "3.7", "3.8", "3.9", "3.10", "pypy3"]
         architecture: ["x64", "x86"]
     name: ${{ matrix.platform }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.platform }}
@@ -22,15 +22,14 @@ jobs:
       uses: allenevans/set-env@v2.0.0
       with:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+        GITHUB_PATH: "$HOME/.nimble/bin"
 
-    # --use-feature=in-tree-build
     - name: Test (Linux)
       if: runner.os == 'Linux'
       shell: bash
       run: |
         sudo pip --no-color --no-python-version-warning --disable-pip-version-check --no-cache-dir --no-input --verbose install dist/
 
-    # Dev team does NOT have Mac.
     - name: Test (Mac)
       if: runner.os == 'macOS'
       continue-on-error: true
@@ -43,10 +42,22 @@ jobs:
       shell: bash
       run: |
         pip --no-color --no-python-version-warning --disable-pip-version-check --no-cache-dir --no-input --verbose install dist/
+        echo "$HOME/.nimble/bin" >> $GITHUB_PATH
 
-    - name: After-Install Test
+    - name: After-Install Nim/Nimble Test
       shell: bash
       run: |
-        nim --version
-        nimble --version
-        nimble list --installed
+        nim -v
+        nimble -v
+
+    - name: After-Install StdLib PATH Test
+      shell: bash
+      run: |
+        echo "import std/strutils" > temp.nim
+        nim c temp.nim
+
+    - name: After-Install Nimble libs PATH Test
+      shell: bash
+      run: |
+        echo "import cpython/math" > temp.nim
+        nim c temp.nim
