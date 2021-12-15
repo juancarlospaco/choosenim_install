@@ -1,8 +1,8 @@
 import os, sys, setuptools, subprocess, shutil, platform, urllib, tempfile, ssl, json
 from setuptools.command.install import install
 
-assert platform.python_implementation() == "CPython", "ERROR: Python implementation must be CPython!."
-assert sys.version_info > (3, 0, 0), "ERROR: Python version must be > 3.0!."
+assert (sys.version_info > (3, 5, 0) or sys.version_info > (2, 7, 9)), "ERROR: Python version must be > 3.5."
+
 home = os.path.expanduser("~")
 contexto = ssl.create_default_context()
 contexto.check_hostname = False
