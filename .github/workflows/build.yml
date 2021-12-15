@@ -50,3 +50,4 @@ jobs:
       run: |
         nim -v
         nimble -v
+        nim r --eval:"import nimpy, cpython, nodejs"
