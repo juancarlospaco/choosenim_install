@@ -50,8 +50,10 @@ def prepare_folders():
     os.path.join(home, ".choosenim", "toolchains")
   ]
 
-  if not sys.platform.startswith("win"):
-    folders2create = folders2create + [os.path.join("/usr", "bin", ".nimble"), os.path.join("/usr", "lib", "nim"),os.path.join("/usr", "lib", "nim", "lib")]
+  if sys.platform.startswith("linux"):
+    folders2create.append(os.path.join("/usr", "bin", ".nimble"))
+    folders2create.append(os.path.join("/usr", "lib", "nim"))
+    folders2create.append(os.path.join("/usr", "lib", "nim", "lib"))
 
   for folder in folders2create:
     if not os.path.exists(folder):  # Older Python do not have exists_ok
