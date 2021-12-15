@@ -202,6 +202,12 @@ def add_to_path(filename):
     print("OK\tWriting to " + filename)
     with open(filename, "w") as f:
       f.write(new_path)
+  finally:
+    # source ".bashrc" updates the PATH without restarting the terminal.
+    if subprocess.call("source " + filename, shell=True, timeout=9) == 0:
+      print("OK\tsource " + filename)
+    else:
+      print("ER\tFailed to run source " + filename)
 
 
 def run_finishexe():
