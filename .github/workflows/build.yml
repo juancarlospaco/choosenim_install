@@ -54,5 +54,7 @@ jobs:
     - name: After-Install PATH Test
       shell: bash
       run: |
-        echo "import nimpy, cpython, nodejs, strutils" > temp.nim
+        echo "import std/strutils" > temp.nim
+        nim c temp.nim
+        echo "import nimpy, cpython, nodejs" > temp.nim
         nim c temp.nim
