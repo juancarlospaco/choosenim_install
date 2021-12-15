@@ -22,15 +22,14 @@ jobs:
       uses: allenevans/set-env@v2.0.0
       with:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+        GITHUB_PATH: "$HOME/.nimble/bin"
 
-    # --use-feature=in-tree-build
     - name: Test (Linux)
       if: runner.os == 'Linux'
       shell: bash
       run: |
         sudo pip --no-color --no-python-version-warning --disable-pip-version-check --no-cache-dir --no-input --verbose install dist/
 
-    # Dev team does NOT have Mac.
     - name: Test (Mac)
       if: runner.os == 'macOS'
       continue-on-error: true
