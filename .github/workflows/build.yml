@@ -50,4 +50,9 @@ jobs:
       run: |
         nim -v
         nimble -v
-        nim r --eval:"import nimpy, cpython, nodejs"
+
+    - name: After-Install PATH Test
+      shell: bash
+      run: |
+        echo "import nimpy, cpython, nodejs, strutils" > temp.nim
+        nim c temp.nim
