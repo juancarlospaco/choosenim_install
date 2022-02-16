@@ -64,3 +64,4 @@ now it re-implements `choosenim` functionalities in pure Python.
 # Stars
 
 ![](https://starchart.cc/juancarlospaco/choosenim_install.svg)
+:star: [@juancarlospaco](https://github.com/juancarlospaco '2022-02-16')	
