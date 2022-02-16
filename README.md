@@ -60,3 +60,7 @@ now it re-implements `choosenim` functionalities in pure Python.
 # More Info
 
 - [**For Python Developers.**](https://github.com/nim-lang/Nim/wiki/Nim-for-Python-Programmers#table-of-contents)
+
+# Stars
+
+![](https://starchart.cc/juancarlospaco/choosenim_install.svg)
