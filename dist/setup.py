@@ -347,9 +347,9 @@ def postinstall():
 class X(install):
 
   def run(self):
-    install.run(self)    # This is required by Python.
+    install.run(self)      # This is required by Python.
     if choosenim_setup():  # Check if choosenim is already installed.
-      nim_setup()                   # Install Nim.
+      nim_setup()          # Install Nim.
       if not sys.platform.startswith("win"):
         add_to_path(".bashrc")
         add_to_path(".profile")
@@ -358,7 +358,7 @@ class X(install):
         add_to_path(".zshenv")
       elif sys.platform.startswith("win"):  # Windows
         run_finishexe()
-      if not nimble_setup():                       # Update Nimble.
+      if not nimble_setup():                # Update Nimble.
         print("ER\tFailed to setup Nimble")
       postinstall()
     else:
