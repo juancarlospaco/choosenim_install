@@ -49,14 +49,14 @@ jobs:
         nim -v
         nimble -v
 
-    - name: After-Install StdLib PATH Test
-      shell: bash
-      run: |
-        echo "import std/strutils" > temp.nim
-        nim c temp.nim
+    # - name: After-Install StdLib PATH Test
+    #   shell: bash
+    #   run: |
+    #     echo "import std/strutils" > temp.nim
+    #     nim c temp.nim
 
-    - name: After-Install Nimble libs PATH Test
-      shell: bash
-      run: |
-        echo "import cpython/math" > temp.nim
-        nim c temp.nim
+    # - name: After-Install Nimble libs PATH Test
+    #   shell: bash
+    #   run: |
+    #     echo "import cpython/math" > temp.nim
+    #     nim c temp.nim
