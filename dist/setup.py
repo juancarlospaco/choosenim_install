@@ -108,8 +108,11 @@ def backup_nim_version(src):
   else:
     bsrc = os.path.join("/usr", "bin", ".nimble") if "bin" in src else os.path.join("/usr", "lib", "nim")
 
-  os.rename(bsrc, dest)
-  os.chmod(dest, 0o775)
+  try:
+    os.rename(bsrc, dest)
+    os.chmod(dest, 0o775)
+  except:
+    print("ER\tFailed to copy file: " + bsrc + " into " + dest)
 
 
 def nim_setup():
@@ -139,13 +142,13 @@ def nim_setup():
     except:
       print("ER\tFailed to chmod: " + executable)
 
-  backup_nim_version(os.path.join(home,".nimble_backup"))
-
-  #All folders are stored in the same location for every os
-  #copy_folders(os.path.join(home, ".choosenim", "toolchains", "nim-#devel"), os.path.join(home, ".nimble"))
-  os.rename(os.path.join(home, ".choosenim", "toolchains", "nim-#devel"), os.path.join(home, ".nimble"))
-
   if not sys.platform.startswith("win"):
+    backup_nim_version(os.path.join(home, ".nimble_backup"))
+
+    #All folders are stored in the same location for every os
+    #copy_folders(os.path.join(home, ".choosenim", "toolchains", "nim-#devel"), os.path.join(home, ".nimble"))
+    os.rename(os.path.join(home, ".choosenim", "toolchains", "nim-#devel"), os.path.join(home, ".nimble"))
+
     #shutil.copyfile(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "nim" + ext), os.path.join(home, "nim" + ext))
     #shutil.copyfile(os.path.join(home, ".choosenim", "toolchains", "nim-#devel", "bin", "nimble" + ext), os.path.join(home, "nimble" + ext))
     shutil.copyfile(os.path.join(home, ".nimble", "bin", "nim" + ext), os.path.join(home, "nim" + ext))
@@ -175,6 +178,7 @@ def choosenim_setup():
   result = False
   shutil.rmtree(os.path.join(home, ".choosenim", "downloads"), ignore_errors=True)  # Clear download cache.
   choosenim_exe = "choosenim.exe" if sys.platform.startswith("win") else "choosenim"
+
   if subprocess.call(choosenim_exe + " --version", shell=True, timeout=9) == 0:
     print("ER\tChoosenim is already installed and working on the system " + choosenim_exe)
     if subprocess.call(choosenim_exe + " update self", shell=True, timeout=999) != 0:
@@ -209,6 +213,14 @@ def add_to_path(filename):
     os.system("bash -c 'source " + filename + "'")
 
 
+# So looks like Windows Antivirus eats the DLL ZIP file and Python fails with no tracebacks ???
+# def install_ddls():
+#   dlls_zip_link = "https://nim-lang.org/download/dlls.zip"
+#   filename = os.path.join(tempfile.gettempdir(), "dlls.zip")
+#   print("OK\tDownloading: " + dlls_zip_link + " into " + filename)
+#   download(dlls_zip_link, filename)
+
+
 def run_finishexe():
   # Just for setting required directories in front of %PATH% environment variable
   # before finish.exe download a compatible compiler
@@ -225,6 +237,7 @@ def run_finishexe():
   os.system("setx PATH \"{}\"".format(required_dirs))
 
   finishexe = os.path.join(home, ".nimble", "finish.exe")
+
   os.system("mkdir dist")
   if os.path.exists(finishexe):
     if subprocess.call(finishexe + " -y", shell=True) != 0:
@@ -236,12 +249,12 @@ def run_finishexe():
 
 
 def install_nimble_packages(nimble_exe, nim_exe=""):
-  packages = ["cpython", "nodejs"]
+  packages = ["cpython", "nodejs", "fusion"]
   installed_packages = 0
   nimble_cmd = None
 
   nimble_cmd =  " --accept --noColor --noSSLCheck" if nim_exe == "" else " --accept --noColor --noSSLCheck --nim=" + nim_exe
-  nimble_cmd = "'" + nimble_exe + "'" + nimble_cmd  # Quotes are required in Windows.
+  nimble_cmd =  nimble_exe + nimble_cmd
 
   if subprocess.call(nimble_cmd + " refresh", shell=True, timeout=999) == 0:
     print("OK\t" + nimble_cmd + " --verbose refresh")
@@ -264,6 +277,10 @@ def nimble_setup():
   # nim and nimble are already in the path, so... let's use them ;)
   nimble_exe = os.path.join(home, ".nimble", "bin", "nimble" + ext) if "GITHUB_ACTIONS" in os.environ else "nimble"+ext
   nim_exe = os.path.join(home, ".nimble", "bin", "nim" + ext) if "GITHUB_ACTIONS" in os.environ else "nim"+ext
+
+  if sys.platform.startswith("win"):
+    nimble_exe = "nimble" + ext  # Full path cant be used for Windows?.
+    nim_exe    = "nim"    + ext
 
   nim_ok = subprocess.call(nim_exe + " --version", shell=True, timeout=9)
   nimble_ok = subprocess.call(nimble_exe + " --version", shell=True, timeout=9)
@@ -339,7 +356,7 @@ class X(install):
         add_to_path(".bash_profile")
         add_to_path(".zshrc")
         add_to_path(".zshenv")
-      else:  # Windows
+      elif sys.platform.startswith("win"):  # Windows
         run_finishexe()
       if not nimble_setup():                       # Update Nimble.
         print("ER\tFailed to setup Nimble")
