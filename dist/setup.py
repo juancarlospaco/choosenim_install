@@ -1,7 +1,7 @@
 import os, sys, setuptools, subprocess, shutil, platform, urllib, tempfile, ssl, json
 from setuptools.command.install import install
 
-assert platform.python_implementation() in ["CPython", "PyPy"], "ERROR: Python implementation must be CPython."
+assert platform.python_implementation() in ["CPython"], "ERROR: Python implementation must be CPython."
 assert (sys.version_info > (3, 5, 0) or sys.version_info > (2, 7, 9)), "ERROR: Python version must be > 3.5."
 
 home = os.path.expanduser("~")
