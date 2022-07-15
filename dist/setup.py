@@ -205,7 +205,7 @@ def add_to_path(filename):
     with open(filename, "w") as f:
       f.write(new_path)
   finally:
-    # source ".bashrc" updates the PATH without restarting the terminal.   
+    # source ".bashrc" updates the PATH without restarting the terminal.
     os.system("bash -c 'source " + filename + "'")
 
 
@@ -236,12 +236,12 @@ def run_finishexe():
 
 
 def install_nimble_packages(nimble_exe, nim_exe=""):
-  packages = ["cpython", "nodejs", "fusion"]
+  packages = ["cpython", "nodejs"]
   installed_packages = 0
   nimble_cmd = None
 
   nimble_cmd =  " --accept --noColor --noSSLCheck" if nim_exe == "" else " --accept --noColor --noSSLCheck --nim=" + nim_exe
-  nimble_cmd = nimble_exe + nimble_cmd
+  nimble_cmd = "'" + nimble_exe + "'" + nimble_cmd  # Quotes are required in Windows.
 
   if subprocess.call(nimble_cmd + " refresh", shell=True, timeout=999) == 0:
     print("OK\t" + nimble_cmd + " --verbose refresh")
