@@ -65,3 +65,4 @@ now it re-implements `choosenim` functionalities in pure Python.
 
 ![](https://starchart.cc/juancarlospaco/choosenim_install.svg)
 :star: [@juancarlospaco](https://github.com/juancarlospaco '2022-02-16')	
+:star: [@adokitkat](https://github.com/adokitkat '2022-10-09')	
