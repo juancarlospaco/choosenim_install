@@ -70,3 +70,4 @@ now it re-implements `choosenim` functionalities in pure Python.
 :star: [@makkus](https://github.com/makkus '2022-10-13')	
 :star: [@jmetz](https://github.com/jmetz '2022-10-17')	
 :star: [@lf-araujo](https://github.com/lf-araujo '2023-01-01')	
+:star: [@shaoxie1986](https://github.com/shaoxie1986 '2023-10-08')	
